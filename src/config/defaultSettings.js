@@ -24,7 +24,7 @@ export default {
     locale: true
   },
   multiTab: true,
-  title: 'CoRT',
+  title: '信息流后台管理系统',
   pwa: false,
   iconfontUrl: '',
   production: process.env.NODE_ENV === 'production' && process.env.VUE_APP_PREVIEW !== 'true'

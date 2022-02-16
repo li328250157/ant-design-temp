@@ -74,11 +74,12 @@ const user = {
       commit
     }, userId) {
       return new Promise((resolve, reject) => {
-        getInfo({
-          userId: userId
-        }).then(response => {
+        // getInfo({
+        //   userId: userId
+        // }).then(response => {
           let res = {}
-          if (response.data.ifAdmin){
+          // if (response.data.ifAdmin){
+          if (true){
              res = {
               'id': 'admin',
               'name': '管理员',
@@ -135,9 +136,9 @@ const user = {
           resolve({
             result: result
           })
-        }).catch(error => {
-          reject(error)
-        })
+        // }).catch(error => {
+        //   reject(error)
+        // })
       })
     },
 

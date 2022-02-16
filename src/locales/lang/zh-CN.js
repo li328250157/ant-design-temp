@@ -21,7 +21,7 @@ export default {
 
   'layouts.usermenu.dialog.title': '信息',
   'layouts.usermenu.dialog.content': '您确定要注销吗？',
-  'layouts.userLayout.title': '代码覆盖率平台',
+  'layouts.userLayout.title': '信息流后台管理系统',
   ...components,
   ...global,
   ...menu,

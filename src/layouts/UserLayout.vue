@@ -10,7 +10,7 @@
 					<div class="header">
 						<a href="/">
 							<img src="~@/assets/logo.svg" class="logo" alt="logo">
-							<span class="title">CoRT</span>
+							<span class="title">信息流后台管理系统</span>
 						</a>
 					</div>
 					<div class="desc">
@@ -27,7 +27,7 @@
 						<a href="_self">条款</a>
 					</div>
 					<div class="copyright">
-						Copyright &copy; 2021 CoRT
+						Copyright &copy; 2021 信息流后台管理系统
 					</div>
 				</div>
 			</div>

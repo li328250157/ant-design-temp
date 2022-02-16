@@ -4,7 +4,8 @@ import {
     FormModel,
     Tree,
     Cascader,
-    TreeSelect
+    TreeSelect,
+    Pagination
 } from 'ant-design-vue'
 import notification from 'ant-design-vue/es/notification'
 import message from 'ant-design-vue/es/message'
@@ -54,6 +55,7 @@ Vue.use(plugins)
 Vue.use(VueAxios)
 Vue.use(Tree)
 Vue.use(TreeSelect)
+Vue.use(Pagination)
 Vue.use(Cascader)
 Vue.use(ElementUI)
 Vue.use(FormModel)

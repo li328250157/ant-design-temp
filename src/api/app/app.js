@@ -1,46 +1,59 @@
-import request from '@/utils/request'
+import request from '@/utils/request2'
 
 const api = {
-  app_list: '/api/v1/app/pkg/list',
-  versions: '/api/v1/app/version/list',
-  artifact: '/api/v1/app/artifact/info',
-  commits: '/api/v1/git/commit/list',
-  register:'/api/v1/app/register'
+  flowerTypeList:'/flowerType/getFLowerTypeList',
+  flowerSaveOrUpdate:'/flowerType/flowerSaveOrUpdate',
+  commentList:'/comment/getCommentList',
+  deleteComment:'/comment/removeCommentById',
+  emailList:'/googleUser/getGoogleUserList',
+  deleteEmail:'/googleUser/removeGoogleById'
 }
-export function appRegister(parameter) {
+export function getFlowerList(parameter) {
   return request({
-    url: api.register,
+    url: api.flowerTypeList,
     method: 'post',
     data: parameter
   })
 }
-
-export function getAppList(parameter) {
+export function flowerSaveOrUpdate(parameter) {
   return request({
-    url: api.app_list,
-    method: 'get',
-    params: parameter
-  })
-}
-
-export function getVersions(parameter) {
-  return request({
-    url: api.versions,
+    url: api.flowerSaveOrUpdate,
     method: 'post',
     data: parameter
   })
 }
-export function getCommitList(parameter) {
+export function getCommentList(parameter) {
   return request({
-    url: api.commits,
+    url: api.commentList,
     method: 'post',
     data: parameter
   })
 }
-export function getArtifactId(parameter) {
+export function deleteComment(parameter) {
   return request({
-    url: api.artifact,
+    url: api.deleteComment,
     method: 'post',
     data: parameter
   })
 }
+export function getEmailList(parameter) {
+  return request({
+    url: api.emailList,
+    method: 'post',
+    data: parameter
+  })
+}
+export function deleteEmail(parameter) {
+  return request({
+    url: api.deleteEmail,
+    method: 'post',
+    data: parameter
+  })
+}
+// export function getAppList(parameter) {
+//   return request({
+//     url: api.app_list,
+//     method: 'get',
+//     params: parameter
+//   })
+// }

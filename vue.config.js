@@ -114,6 +114,14 @@ const vueConfig = {
           "^/api": ""
         }
       },
+      '/hua': {
+        target: 'http://121.201.66.113:9097',
+        ws: false,
+        changeOrigin: true,
+        pathRewrite: {
+          "^/hua": ""
+        }
+      },
     }
   },
 

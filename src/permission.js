@@ -26,7 +26,8 @@ router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
   to.meta && (typeof to.meta.title !== 'undefined' && setDocumentTitle(`${i18nRender(to.meta.title)} - ${domTitle}`))
   /* has token */
-  if (Cookies.get(ACCESS_TOKEN)) {
+  // if (Cookies.get(ACCESS_TOKEN)) {
+    if (true) {
     if (to.path === loginRoutePath) {
       next({
         path: defaultRoutePath
@@ -37,7 +38,7 @@ router.beforeEach((to, from, next) => {
       if (store.getters.roles.length === 0) {
         // request login userInfo
         store
-          .dispatch('GetInfo', Cookies.get(USERID))
+          .dispatch('GetInfo', "123")
           .then(res => {
             const roles = res.result && res.result.role
             // generate dynamic router
