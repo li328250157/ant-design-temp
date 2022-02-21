@@ -122,6 +122,14 @@ const vueConfig = {
           "^/hua": ""
         }
       },
+      '/lg': {
+        target: 'http://121.201.66.113:9094',
+        ws: false,
+        changeOrigin: true,
+        pathRewrite: {
+          "^/lg": ""
+        }
+      },
     }
   },
 
