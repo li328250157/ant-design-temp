@@ -12,7 +12,8 @@ import {
 // 创建 axios 实例
 const request = axios.create({
     // API 请求的默认前缀
-    baseURL: process.env.VUE_APP_API_BASE_URL,
+    // baseURL: process.env.VUE_APP_API_BASE_URL,
+    baseURL: '/lg',
     timeout: 30000 // 请求超时时间
 })
 
@@ -70,20 +71,20 @@ request.interceptors.request.use(config => {
 // response interceptor
 request.interceptors.response.use((response) => {
     const data = response.data
-    if (data.errno === 0) {
+    if (data.status === 200) {
         return response.data
     } else {
         notification.warning({
             message: 'warning',
-            description: data.errmsg
+            description: data.message
         })
-        if (error.errno === 10004) {
-            store.dispatch('Logout').then(() => {
-                setTimeout(() => {
-                    window.location.reload()
-                }, 1500)
-            })
-        }
+        // if (error.errno === 10004) {
+        //     store.dispatch('Logout').then(() => {
+        //         setTimeout(() => {
+        //             window.location.reload()
+        //         }, 1500)
+        //     })
+        // }
     }
 }, errorHandler)
 

@@ -6,7 +6,9 @@ const api = {
   commentList:'/comment/getCommentList',
   deleteComment:'/comment/removeCommentById',
   emailList:'/googleUser/getGoogleUserList',
-  deleteEmail:'/googleUser/removeGoogleById'
+  deleteEmail:'/googleUser/removeGoogleById',
+  TypeTree:'/flowerType/getFLowerTypeList',
+  fileUpload:'/file/layeditUpload'
 }
 export function getFlowerList(parameter) {
   return request({
@@ -50,10 +52,17 @@ export function deleteEmail(parameter) {
     data: parameter
   })
 }
-// export function getAppList(parameter) {
-//   return request({
-//     url: api.app_list,
-//     method: 'get',
-//     params: parameter
-//   })
-// }
+export function getTypeTree(parameter) {
+  return request({
+    url: api.TypeTree,
+    method: 'get',
+    params: parameter
+  })
+}
+export function fileUpload(parameter) {
+  return request({
+    url: api.fileUpload,
+    method: 'post',
+    data: parameter
+  })
+}

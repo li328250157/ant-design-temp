@@ -95,15 +95,13 @@ export default {
 					const loginParams = { ...values }
 					delete loginParams.username
 					loginParams.userId = values.username
-					loginParams.password = Base64.encode(values.password)
-          this.loginSuccess(loginParams.userId)
-          state.loginBtn = false
-					// Login(loginParams)
-					// 	.then((res) => this.loginSuccess(loginParams.userId))
-					// 	.catch((err) => this.requestFailed(err))
-					// 	.finally(() => {
-					// 		state.loginBtn = false
-					// 	})
+					loginParams.password = values.password
+					Login(loginParams)
+						.then((res) => this.loginSuccess(loginParams.userId))
+						// .catch((err) => this.requestFailed(err))
+						.finally(() => {
+							state.loginBtn = false
+						})
 				} else {
 					setTimeout(() => {
 						state.loginBtn = false

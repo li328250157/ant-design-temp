@@ -51,17 +51,14 @@ const user = {
     }, userInfo) {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
-          const result = response.data.data
-          Cookies.set(ACCESS_TOKEN, result.sessionKey, {
+          const result = response.data
+          Cookies.set(ACCESS_TOKEN, result, {
             expires: 1
           })
-          Cookies.set(USERID, result.userName, {
+          Cookies.set(USERID, userInfo.userId, {
             expires: 1
           })
-          Cookies.set(USERNAME, result.displayName, {
-            expires: 1
-          })
-          commit('SET_TOKEN', result.sessionKey)
+          commit('SET_TOKEN', result)
           resolve()
         }).catch(error => {
           reject(error)
