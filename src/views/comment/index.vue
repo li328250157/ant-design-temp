@@ -6,8 +6,7 @@
 
         </a-col>
         <a-col :span='12' style='text-align: right'>
-          邮箱：<a-input v-model='formInline.email' style='width: 450px' placeholder='input placeholder' />
-          <a-button type='primary' @click='getCommentList' style='margin-left: 10px' :loading='btnLoading'>查询</a-button>
+          邮箱：<a-input-search v-model='formInline.email' placeholder="input search text" style="width: 400px" @search="getCommentList" />
         </a-col>
       </a-row>
       <a-table :columns='columns' rowKey='artifactId' :data-source='tableData'  :loading="btnLoading2" style='background: #FFFFFF' bordered :pagination='false'>

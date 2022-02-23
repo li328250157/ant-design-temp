@@ -1,11 +1,11 @@
 <template>
   <page-header-wrapper>
     <a-card>
-<!--      <a-row style='margin-bottom: 20px'>-->
-<!--        <a-col :span='12'>-->
-<!--          <a-button type='primary'>新增分类</a-button>-->
-<!--        </a-col>-->
-<!--      </a-row>-->
+      <a-row style='margin-bottom: 20px'>
+        <a-col :span='12'>
+          <a-button type='primary' @click='exportExcel'>导出excel</a-button>
+        </a-col>
+      </a-row>
       <a-table :columns='columns' rowKey='artifactId' :data-source='tableData'  :loading="btnLoading2" style='background: #FFFFFF' bordered :pagination='false'>
         <span slot="action" slot-scope="text, record">
               <a @click.prevent='contentDelete(record)'>删除</a>
@@ -91,6 +91,12 @@ export default {
         this.$tips.success('删除成功！')
       })
     },
+    exportExcel(){
+      const ws = this.$XLSX.utils.json_to_sheet(this.tableData);
+      const wb = this.$XLSX.utils.book_new();
+      this.$XLSX.utils.book_append_sheet(wb, ws, "excel");
+      let wbout =  this.$XLSX.writeFile(wb, "data.xlsx");
+    }
   }
 }
 </script>

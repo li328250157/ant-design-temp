@@ -5,18 +5,21 @@
         <a-col :span='12'>
           <a-button type='primary' @click='showModal'>新增文章</a-button>
         </a-col>
-        <a-col :span='8'>
-          标题：<a-input v-model='formInline.title' style='width: 450px' placeholder='input placeholder' />
-        </a-col>
-        <a-col :span='4'>
-          <a-button type='primary' @click='getFlowerList' :loading='btnLoading'>查询</a-button>
+        <a-col :span='12' style='text-align: right'>
+          标题：<a-input-search v-model='formInline.title' placeholder="input search text" style="width: 400px" @search="getFlowerList" />
         </a-col>
       </a-row>
-      <a-table :columns='columns' rowKey='artifactId' :data-source='tableData'  :loading="btnLoading2" style='background: #FFFFFF' bordered :pagination='false'>
+      <a-table :columns='columns' rowKey='id' :data-source='tableData'  :loading="btnLoading2" style='background: #FFFFFF' bordered :pagination='false'>
             <span slot='classic' slot-scope='typeFirst,typeSecond,typeThird'>
-              <a-tag :color="typeFirst === 100 ? 'volcano' : 'green'">
-                {{ typeFirst === 100 ? '一级分类':'二级分类' }}
-              </a-tag>
+              <a-cascader
+                :defaultValue='[typeFirst,typeSecond,typeThird]'
+                :options="options"
+                disabled
+                placeholder="Please select"
+              />
+            </span>
+           <span slot='iconSrc' slot-scope='iconSrc'>
+                <a-avatar  shape="square" :size="200" :src="'https://file.skyclound.com/upload/flower'+iconSrc" />
             </span>
             <span slot="action" slot-scope="text, record">
               <a @click.prevent='contentEdit(record)'>编辑</a>
@@ -39,7 +42,7 @@
       :visible="uploadVisible"
       :confirm-loading="confirmLoading"
       @cancel="handleCancel"
-      width='70%'
+      width='60%'
       :footer="null"
     >
       <a-form
@@ -53,28 +56,38 @@
           :wrapper-col="formItemLayout.wrapperCol"
           label="标题"
         >
-          <a-input v-decorator="['title']" placeholder="Please input your typeName" />
+          <a-input v-decorator="['title',{rules: [
+              {
+                required: true,
+                message: 'Please input your title!',
+              },
+            ]}]" placeholder="Please input your typeName" />
         </a-form-item>
-        <a-form-item
-          :label-col="formItemLayout.labelCol"
-          :wrapper-col="formItemLayout.wrapperCol"
-          label="描述"
-        >
-          <a-input v-decorator="['describe']" placeholder="Please input your flowerTypeDescribe" />
+        <a-form-item  :label-col="formItemLayout.labelCol" :wrapper-col="formItemLayout.wrapperCol" label="描述">
+          <a-textarea
+            placeholder="Autosize height with minimum and maximum number of lines"
+            v-decorator="['describe',{rules: [
+              {
+                required: true,
+                message: 'Please input your describe!',
+              },
+            ]}]"
+            :auto-size="{ minRows: 4 }"
+          />
         </a-form-item>
         <a-form-item
           :label-col="formItemLayout.labelCol"
           :wrapper-col="formItemLayout.wrapperCol"
           label="作者"
         >
-          <a-switch default-checked v-decorator="['generateAuthor']" />
+          <a-switch  v-decorator="['generateAuthor',{ valuePropName: 'checked' }]" />
         </a-form-item>
         <a-form-item
           :label-col="formItemLayout.labelCol"
           :wrapper-col="formItemLayout.wrapperCol"
           label="生成HTML文件"
         >
-          <a-switch v-decorator="['generateHtml', { valuePropName: 'checked' }]" />
+          <a-switch v-decorator="['generateHtml',{ valuePropName: 'checked' }]" />
         </a-form-item>
         <a-form-item
           :label-col="formItemLayout.labelCol"
@@ -82,8 +95,14 @@
           label="所属分类"
         >
           <a-cascader
-            v-decorator="['typeName']"
+            v-decorator="['typeName',{rules: [
+              {
+                required: true,
+                message: 'Please input your typeName!',
+              },
+            ]}]"
             :options="options"
+            change-on-select
             expand-trigger="hover"
             placeholder="Please select"
           />
@@ -98,11 +117,11 @@
             list-type="picture"
             accept='.doc,.docx'
             :multiple="false"
-            action="http://121.201.66.113:9097//file/layeditUpload"
             :file-list="wordList"
-            @change="handleChange2"
+            :beforeUpload="beforeUpload"
+            :customRequest='previewFile'
           >
-            <a-button> <a-icon type="upload" /> Click to upload </a-button>
+            <a-button> <a-icon type="upload" /> 导入word </a-button>
           </a-upload>
         </a-form-item>
         <a-form-item
@@ -110,10 +129,28 @@
           :wrapper-col="formItemLayout.wrapperCol"
           label="富文本"
         >
-          <tinymce :value='richText' />
+          <tinymce :richText='richText' @updateContent='updateContent' />
         </a-form-item>
-        <a-form-item label="封面图"           :label-col="formItemLayout.labelCol"
-                     :wrapper-col="formItemLayout.wrapperCol">
+        <a-form-item label="展示类型">
+          <a-radio-group v-decorator="['showType']" @change='changeShowType'>
+            <a-radio-button :value="1">
+              大图文
+            </a-radio-button>
+            <a-radio-button :value="2">
+              三图
+            </a-radio-button>
+            <a-radio-button :value="3">
+              文字
+            </a-radio-button>
+            <a-radio-button :value="4">
+              视频
+            </a-radio-button>
+            <a-radio-button :value="5">
+              小图文
+            </a-radio-button>
+          </a-radio-group>
+        </a-form-item>
+        <a-form-item label="封面图" v-if='form.getFieldValue("showType")==1||form.getFieldValue("showType")==5||form.getFieldValue("showType")==4'  :label-col="formItemLayout.labelCol" :wrapper-col="formItemLayout.wrapperCol">
           <a-upload
             name="file"
             list-type="picture"
@@ -126,15 +163,62 @@
             <a-button> <a-icon type="upload" /> Click to upload </a-button>
           </a-upload>
           <a-input
-            v-decorator="[
-          'iconSrc',
-        ]"
+            v-decorator="['iconSrc',{rules: [
+              {
+                required: true,
+                message: 'Please input your iconSrc!',
+              },
+            ]}]"
             placeholder="Please input your iconSrc"
           />
         </a-form-item>
-        <a-form-item :wrapper-col="{ span: 12, offset: 6 }">
-          <a-button type="primary" html-type="submit">
-            Submit
+        <a-form-item label="封面图" v-if='form.getFieldValue("showType")==2'  :label-col="formItemLayout.labelCol" :wrapper-col="formItemLayout.wrapperCol">
+          <a-upload
+            name="file"
+            list-type="picture"
+            accept='image/*'
+            action="http://121.201.66.113:9097//file/layeditUpload"
+            :file-list="typeImg"
+            @change="handleChange2"
+          >
+            <a-button> <a-icon type="upload" /> Click to upload </a-button>
+          </a-upload>
+          <a-input
+            v-decorator="['iconSrc',{rules: [
+              {
+                required: true,
+                message: 'Please input your iconSrc!',
+              },
+            ]}]"
+            placeholder="Please input your iconSrc"
+          />
+        </a-form-item>
+        <a-form-item label="视频上传" v-if='form.getFieldValue("showType")==4'  :label-col="formItemLayout.labelCol" :wrapper-col="formItemLayout.wrapperCol">
+          <a-upload
+            name="file"
+            list-type="picture"
+            :multiple="false"
+            action="http://121.201.66.113:9097//file/layeditUpload"
+            :file-list="videoList"
+            @change="handleChange3"
+          >
+            <a-button> <a-icon type="upload" /> Click to upload </a-button>
+          </a-upload>
+          <a-input
+            v-decorator="[
+          'videoSrc',{rules: [
+              {
+                required: true,
+                message: 'Please input your videoSrc!',
+              },
+            ]}
+        ]"
+            placeholder="Please input your videoSrc"
+          />
+        </a-form-item>
+        <a-form-item :wrapper-col="{ span: 12, offset: 12 }">
+          <a-button type="primary" :loading='btnLoading' html-type="submit">
+            提交
           </a-button>
         </a-form-item>
       </a-form>
@@ -143,8 +227,9 @@
 </template>
 
 <script>
-import { flowerSaveOrUpdate, getFlowerList ,getTypeTree} from '@/api/app/app'
+import { flowerSaveOrUpdate, getFlowerList, getTypeTree, deleteFlower } from '@/api/app/app'
 import tinymce from "./tinymce";
+import mammoth from "mammoth";
 const columns = [
   {
     title: 'id',
@@ -161,6 +246,12 @@ const columns = [
     title: '标题',
     dataIndex: 'title',
     key: 'title',
+  },
+  {
+    title: '缩略图',
+    dataIndex: 'iconSrc',
+    key: 'iconSrc',
+    scopedSlots: { customRender: 'iconSrc' },
   },
   {
     title: '操作',
@@ -180,13 +271,11 @@ export default {
       },
       formInline: {
         title: '',
+        id:'',
         level:'',
         topId:''
       },
       richText:'',
-      // form:{
-      //   TypeName:'aaaaaaaaaaaaa'
-      // },
       tableData:[],
       btnLoading2:false,
       btnLoading:false,
@@ -195,6 +284,7 @@ export default {
       typeImg: [],
       wordList:[],
       options:[],
+      videoList:[],
       total:0,
       page:0,
       row:10
@@ -206,22 +296,24 @@ export default {
   },
   created() {
     this.getTypeTree()
+    this.getFlowerList()
   },
   methods: {
     getTypeTree(){
+      console.log(this.form)
       getTypeTree().then(res=>{
         this.options = JSON.parse(res.data)
         console.log(JSON.parse(res.data))
       })
     },
     getFlowerList(){
+      this.btnLoading2 = true
       getFlowerList({
-        level:this.formInline.level,
         page:this.page,
         row:this.row,
-        topId: this.formInline.topId
+        title: this.formInline.title
       }).then(res=>{
-        console.log(res)
+        this.btnLoading2 = false
         this.total = res.data.total
         this.tableData = res.data.list
       })
@@ -234,14 +326,27 @@ export default {
     contentEdit(){
 
     },
-    contentDelete(){
-
+    updateContent(value){
+        this.richText = value
+    },
+    contentDelete(record){
+      deleteFlower({
+          id:record.id
+        }).then(res=>{
+          this.$tips.success('删除成功！')
+        this.getFlowerList()
+        })
     },
     showModal() {
       this.uploadVisible = true;
       this.$nextTick(()=>{
-        // console.log(this.form.setFieldsValue({'typeName':111}))
+        this.form.setFieldsValue({'generateAuthor':true})
+        this.form.setFieldsValue({'generateHtml':true})
+        this.form.setFieldsValue({'showType':1})
       })
+    },
+    changeShowType(){
+      this.form.setFieldsValue({'iconSrc':''})
     },
     // 对话框取消
     handleCancel() {
@@ -249,15 +354,26 @@ export default {
     },
     handleSubmit(e) {
       e.preventDefault();
-      console.log(this.bigImg[0])
       this.form.validateFields((err, values) => {
         if (!err) {
+          this.btnLoading = true
           console.log(values)
-          values.typeImg = this.typeImgbase64
-          values.bigImg =  this.bigImgbase64
+          values.typeFirst = values.typeName[0]||0
+          values.typeSecond = values.typeName[1]||0
+          values.typeThird = values.typeName[2]||0
+          values.generateAuthor =  values.generateAuthor?0:1
+          values.generateHtml =  values.generateHtml?0:1
+          values.htmlText = this.richText
+          delete  values.typeName
           flowerSaveOrUpdate(values).then(res=>{
-            this.$tips.success('新增成功！')
-            this.uploadVisible = false
+            console.log(res)
+            if (res.status == 200){
+              this.$tips.success('新增成功！')
+              this.uploadVisible = false
+            }else {
+              this.$tips.warning(res.message)
+            }
+            this.btnLoading = false
           })
         }
       });
@@ -265,6 +381,11 @@ export default {
     handleChange(file) {
       let fileList = [...file.fileList];
       fileList = fileList.slice(-1);
+      let testmsg = /^image\/(jpeg|png|jpg|pjp|svg|tiff|ico|webp|gif)$/.test(file.file.type)
+      if (!testmsg){
+        this.$tips.warning('请上传图片格式！');
+        return false;
+      }
       fileList = fileList.map(file => {
         if (file.response) {
           // Component will show file.url as link
@@ -279,19 +400,67 @@ export default {
     },
     handleChange2(file) {
       let fileList = [...file.fileList];
-      fileList = fileList.slice(-1);
+      fileList = fileList.slice(-3);
+      let testmsg = /^image\/(jpeg|png|jpg|pjp|svg|tiff|ico|webp|gif)$/.test(file.file.type)
+      if (!testmsg){
+        this.$tips.warning('请上传图片格式！');
+        return false;
+      }
       fileList = fileList.map(file => {
         if (file.response) {
           // Component will show file.url as link
           file.url = file.response.data.src;
           this.$nextTick(()=>{
-            // this.form.setFieldsValue({'iconSrc':file.response.data.src})
-            this.richText="asdfgsdfsdfsdfd"
+            let str = []
+            for (let i = 0; i < fileList.length; i++) {
+              str.push(fileList[i].url)
+            }
+            this.form.setFieldsValue({'iconSrc':str.join(',')})
           })
         }
         return file;
       });
-      this.wordList = fileList;
+      this.typeImg = fileList;
+    },
+    handleChange3(file) {
+      let fileList = [...file.fileList];
+      fileList = fileList.slice(-1);
+      let testmsg = /^video\/(mp4|ogg|flv|avi|wmv|rmvb)$/.test(file.file.type)
+      if (!testmsg){
+        this.$tips.warning('请上视频格式！');
+        return false;
+      }
+      fileList = fileList.map(file => {
+        if (file.response) {
+          // Component will show file.url as link
+          file.url = file.response.data.src;
+          this.$nextTick(()=>{
+            this.form.setFieldsValue({'videoSrc':file.response.data.src})
+          })
+        }
+        return file;
+      });
+      this.videoList = fileList;
+    },
+    previewFile(file){
+      var reader = new FileReader();
+      let that = this
+      reader.onload = function (loadEvent) {
+        var arrayBuffer = loadEvent.target.result;//arrayBuffer
+        mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
+          .then(res=>{
+            that.richText = res.value;
+          })
+          .done();
+      };
+      reader.readAsArrayBuffer(file.file);
+    },
+    beforeUpload(file){
+      var FileExt = file.name.replace(/.+\./, "");
+      if (['doc','docx'].indexOf(FileExt.toLowerCase()) === -1){
+        this.$tips.warning('请上传后缀名为doc、docx的附件！');
+        return false;
+      }
     }
   }
 }

@@ -70,20 +70,20 @@ request.interceptors.request.use(config => {
 // response interceptor
 request.interceptors.response.use((response) => {
   const data = response.data
-  if (data.status === 200) {
-    return response.data
+  if (response.status === 200) {
+    // if (data.status===200){
+      return response.data
+    // }else{
+    //   notification.warning({
+    //     message: 'warning',
+    //     description: data.message
+    //   })
+    // }
   } else {
     notification.warning({
       message: 'warning',
-      description: data.message
+      description: response.message
     })
-    if (error.errno === 10004) {
-      store.dispatch('Logout').then(() => {
-        setTimeout(() => {
-          window.location.reload()
-        }, 1500)
-      })
-    }
   }
 }, errorHandler)
 

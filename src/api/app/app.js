@@ -3,16 +3,26 @@ import request from '@/utils/request2'
 const api = {
   flowerTypeList:'/flowerType/getFLowerTypeList',
   flowerSaveOrUpdate:'/flowerType/flowerSaveOrUpdate',
+  delFlowerTypeById:'/flowerType/delFlowerTypeById',
   commentList:'/comment/getCommentList',
   deleteComment:'/comment/removeCommentById',
   emailList:'/googleUser/getGoogleUserList',
   deleteEmail:'/googleUser/removeGoogleById',
   TypeTree:'/flowerType/getFLowerTypeList',
-  fileUpload:'/file/layeditUpload'
+  fileUpload:'/file/layeditUpload',
+  flowerList:'/flower/getFLowerList',
+  deleteFlower:'/flower/flowerDelById'
+}
+export function deleteFlower(parameter) {
+  return request({
+    url: api.deleteFlower,
+    method: 'post',
+    data: parameter
+  })
 }
 export function getFlowerList(parameter) {
   return request({
-    url: api.flowerTypeList,
+    url: api.flowerList,
     method: 'post',
     data: parameter
   })
@@ -20,6 +30,13 @@ export function getFlowerList(parameter) {
 export function flowerSaveOrUpdate(parameter) {
   return request({
     url: api.flowerSaveOrUpdate,
+    method: 'post',
+    data: parameter
+  })
+}
+export function delFlowerTypeById(parameter) {
+  return request({
+    url: api.delFlowerTypeById,
     method: 'post',
     data: parameter
   })

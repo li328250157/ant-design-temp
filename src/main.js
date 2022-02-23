@@ -40,6 +40,7 @@ import VueClipboard from 'vue-clipboard2'
 import 'xe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
+import * as XLSX from 'xlsx/xlsx.mjs';
 
 Vue.directive('highlight', function(el, obj) {
     const blocks = el.querySelectorAll('pre code')
@@ -66,6 +67,7 @@ Vue.component('page-container', PageHeaderWrapper)
 Vue.component('page-header-wrapper', PageHeaderWrapper)
 Vue.prototype.$message = notification
 Vue.prototype.$tips = message
+Vue.prototype.$XLSX = XLSX
 window.umi_plugin_ant_themeVar = themePluginConfig.theme
 
 new Vue({
