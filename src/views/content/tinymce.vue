@@ -29,7 +29,7 @@ export default {
                 language: "zh_CN", // 语言,
                 skin_url: "/tinymce/skins/ui/oxide-dark", // skin路径
                 content_css: "dark",
-                height: 400, // 编辑器高度
+                height: 500, // 编辑器高度
                 toolbar: "'bold italic underline strikethrough | fontsizeselect | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist | outdent indent blockquote | undo redo | link unlink image code | removeformat | fullscreen",
                 branding: false, // 去水印
                 elementpath: false, // 禁用编辑器底部的状态栏
@@ -37,6 +37,7 @@ export default {
                 paste_data_images: true, // 允许粘贴图像
                 menubar: true, // 隐藏最上方menu
                 plugins: "image link fullscreen", // 图片插件
+                default_link_target: '_blank',
                 paste_auto_cleanup_on_paste: true,
                 paste_remove_styles: true,
                 paste_remove_styles_if_webkit: true,
@@ -46,9 +47,7 @@ export default {
 
                 },
                 images_upload_handler: (blobInfo, success,failure) => {
-                  console.log(blobInfo.blob())
-                  var myFile = new File(blobInfo.blob(), blobInfo.filename[options]);
-                  console.log(myFile)
+                  let files = new window.File([blobInfo.blob()], blobInfo.filename, {type: blobInfo.blob().type})
                   const formData = new FormData()
                   formData.append('file', blobInfo.blob())
                   fileUpload(formData).then(res=>{
@@ -68,8 +67,13 @@ export default {
         };
     },
     computed:{
-      content(){
-        return this.richText
+      content:{
+        get(){
+          return this.richText
+        },
+        set(value){
+          this.$emit('updateContent',value)
+        }
       }
     },
     components: { Editor },
@@ -80,7 +84,16 @@ export default {
         tinymce.init({});
     },
     methods: {
-
+        pushQc(record){
+          tinymce.activeEditor.insertContent(`<div style='height: 40px;line-height: 40px'><span class='ant-avatar ant-avatar-circle ant-avatar-image'><img src=${record.portrait} width='40' height='40'></span><span> By </span><span style='font-weight: bold;line-height: 40px;'>${record.authorName}</span></div>`);
+        },
+        pushStr(tag,tagUrl){
+          let str = ""
+          for (let i = 0; i < tag.length; i++) {
+            str+=`<a href="${tagUrl[i]}" target="_blank" rel="noopener" data-mce-href="${tag[i]}" data-mce-selected="inline-boundary">${tag[i]}</a>,`
+          }
+          tinymce.activeEditor.insertContent(str);
+        }
     },
 };
 </script>

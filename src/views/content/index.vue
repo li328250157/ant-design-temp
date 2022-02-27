@@ -81,6 +81,8 @@
           label="作者"
         >
           <a-switch  v-decorator="['generateAuthor',{ valuePropName: 'checked' }]" />
+          <a-button type="primary" style='margin-left: 20px' @click='pushQc(true)'>追加作者</a-button>
+          <a-button type="primary" style='margin-left: 20px' @click='pushQc(false)'>追加标签</a-button>
         </a-form-item>
         <a-form-item
           :label-col="formItemLayout.labelCol"
@@ -110,18 +112,49 @@
         <a-form-item
           :label-col="formItemLayout.labelCol"
           :wrapper-col="formItemLayout.wrapperCol"
-          label="word上传"
+          label="标签"
+        >
+          <a-select
+            v-decorator="['tag']"
+            mode="tags"
+            style="width: 100%"
+            allowClear
+            placeholder="输入标签"
+            option-label-prop="label"
+          >
+          </a-select>
+        </a-form-item>
+        <a-form-item
+          :label-col="formItemLayout.labelCol"
+          :wrapper-col="formItemLayout.wrapperCol"
+          label="标签url地址"
+        >
+          <a-select
+            v-decorator="['tagUrl']"
+            mode="tags"
+            style="width: 100%"
+            allowClear
+            placeholder="输入标签url地址"
+            option-label-prop="label"
+          >
+          </a-select>
+        </a-form-item>
+        <a-form-item
+          :label-col="formItemLayout.labelCol"
+          :wrapper-col="formItemLayout.wrapperCol"
+          label="word解析"
         >
           <a-upload
             name="file"
             list-type="picture"
             accept='.doc,.docx'
+            :showUploadList='false'
             :multiple="false"
+            action="http://121.201.66.113:9097/file/getDocx"
             :file-list="wordList"
-            :beforeUpload="beforeUpload"
-            :customRequest='previewFile'
+            @change="handleChangeDoc"
           >
-            <a-button> <a-icon type="upload" /> 导入word </a-button>
+            <a-button> <a-icon type="upload" /> word解析 </a-button>
           </a-upload>
         </a-form-item>
         <a-form-item
@@ -129,23 +162,23 @@
           :wrapper-col="formItemLayout.wrapperCol"
           label="富文本"
         >
-          <tinymce :richText='richText' @updateContent='updateContent' />
+          <tinymce ref='tin' :richText='richText' @updateContent='updateContent' />
         </a-form-item>
         <a-form-item label="展示类型">
           <a-radio-group v-decorator="['showType']" @change='changeShowType'>
-            <a-radio-button :value="1">
+            <a-radio-button value="1">
               大图文
             </a-radio-button>
-            <a-radio-button :value="2">
+            <a-radio-button value="2">
               三图
             </a-radio-button>
-            <a-radio-button :value="3">
+            <a-radio-button value="3">
               文字
             </a-radio-button>
-            <a-radio-button :value="4">
+            <a-radio-button value="4">
               视频
             </a-radio-button>
-            <a-radio-button :value="5">
+            <a-radio-button value="5">
               小图文
             </a-radio-button>
           </a-radio-group>
@@ -156,7 +189,7 @@
             list-type="picture"
             accept='image/*'
             :multiple="false"
-            action="http://121.201.66.113:9097//file/layeditUpload"
+            action="http://121.201.66.113:9097/file/layeditUpload"
             :file-list="typeImg"
             @change="handleChange"
           >
@@ -227,7 +260,7 @@
 </template>
 
 <script>
-import { flowerSaveOrUpdate, getFlowerList, getTypeTree, deleteFlower } from '@/api/app/app'
+import { flowerSaveOrUpdate, getFlowerList, getTypeTree, deleteFlower ,getAuthor } from '@/api/app/app'
 import tinymce from "./tinymce";
 import mammoth from "mammoth";
 const columns = [
@@ -299,9 +332,21 @@ export default {
     this.getFlowerList()
   },
   methods: {
+    pushQc(record){
+      if (record){
+        getAuthor().then(res=>{
+          this.$refs.tin.pushQc(res.data.list[0])
+        })
+      }else{
+        this.$nextTick(()=>{
+          console.log(this.form.getFieldValue("tag"))
+          this.$refs.tin.pushStr(this.form.getFieldValue("tag"),this.form.getFieldValue("tagUrl"))
+        })
+      }
+    },
     getTypeTree(){
-      console.log(this.form)
       getTypeTree().then(res=>{
+        console.log(res)
         this.options = JSON.parse(res.data)
         console.log(JSON.parse(res.data))
       })
@@ -323,8 +368,23 @@ export default {
       this.row = pageSize
       this.getFlowerList();
     },
-    contentEdit(){
-
+    contentEdit(record){
+      console.log(record)
+      this.uploadVisible = true;
+      this.$nextTick(()=>{
+        this.form.setFieldsValue({'generateAuthor':Boolean(record.generateAuthor)})
+        this.form.setFieldsValue({'generateHtml':Boolean(record.generateHtml)})
+        this.form.setFieldsValue({'showType':record.showType})
+        this.form.setFieldsValue({'tag':record.tag.split(',')})
+        this.form.setFieldsValue({'tagUrl':record.tagUrl.split(',')})
+        this.form.setFieldsValue({'title':record.title})
+        this.form.setFieldsValue({'title':record.title})
+        this.form.setFieldsValue({'describe':record.describe})
+        this.form.setFieldsValue({'videoSrc':record.videoSrc})
+        this.form.setFieldsValue({'typeName':[record.typeFirst,record.typeSecond,record.typeThird]})
+        this.richText= record.htmlText
+        this.form.setFieldsValue({'iconSrc':record.iconSrc})
+      })
     },
     updateContent(value){
         this.richText = value
@@ -339,14 +399,23 @@ export default {
     },
     showModal() {
       this.uploadVisible = true;
+      this.form.resetFields()
+      this.richText =""
       this.$nextTick(()=>{
         this.form.setFieldsValue({'generateAuthor':true})
         this.form.setFieldsValue({'generateHtml':true})
-        this.form.setFieldsValue({'showType':1})
+        this.form.setFieldsValue({'showType':"1"})
+        this.form.setFieldsValue({'tag':[]})
+        this.form.setFieldsValue({'tagUrl':[]})
       })
     },
     changeShowType(){
-      this.form.setFieldsValue({'iconSrc':''})
+      this.$nextTick(()=> {
+         this.typeImg= []
+        this.videoList= []
+        this.wordList= []
+        this.form.setFieldsValue({ 'iconSrc': '' })
+      })
     },
     // 对话框取消
     handleCancel() {
@@ -357,14 +426,16 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           this.btnLoading = true
-          console.log(values)
-          values.typeFirst = values.typeName[0]||0
-          values.typeSecond = values.typeName[1]||0
-          values.typeThird = values.typeName[2]||0
+          values.typeFirst = Number(values.typeName[0])||0
+          values.typeSecond = Number(values.typeName[1])||0
+          values.typeThird = Number(values.typeName[2])||0
           values.generateAuthor =  values.generateAuthor?0:1
           values.generateHtml =  values.generateHtml?0:1
           values.htmlText = this.richText
+          values.tag = values.tag.join(',')
+          values.tagUrl = values.tagUrl.join(',')
           delete  values.typeName
+          console.log(values)
           flowerSaveOrUpdate(values).then(res=>{
             console.log(res)
             if (res.status == 200){
@@ -442,18 +513,24 @@ export default {
       });
       this.videoList = fileList;
     },
-    previewFile(file){
-      var reader = new FileReader();
-      let that = this
-      reader.onload = function (loadEvent) {
-        var arrayBuffer = loadEvent.target.result;//arrayBuffer
-        mammoth.convertToHtml({ arrayBuffer: arrayBuffer })
-          .then(res=>{
-            that.richText = res.value;
+    handleChangeDoc(file){
+      let fileList = [...file.fileList];
+      fileList = fileList.slice(-1);
+      var FileExt = file.file.name.replace(/.+\./, "");
+      if (['doc','docx'].indexOf(FileExt.toLowerCase()) === -1){
+        this.$tips.warning('请上传后缀名为doc、docx的附件！');
+        return false;
+      }
+      fileList = fileList.map(file => {
+        if (file.response) {
+          this.$nextTick(()=>{
+            console.log(file)
+            this.richText = file.response
           })
-          .done();
-      };
-      reader.readAsArrayBuffer(file.file);
+        }
+        return file;
+      });
+      this.wordList = fileList;
     },
     beforeUpload(file){
       var FileExt = file.name.replace(/.+\./, "");

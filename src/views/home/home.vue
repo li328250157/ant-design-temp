@@ -17,6 +17,9 @@
                 {{ flowerTypeName }}
               </a-tag>
             </span>
+        <span slot='iconSrc' slot-scope='iconSrc'>
+                <a-avatar  shape="square" :size="100" :src="'https://file.skyclound.com/upload/flower'+iconSrc" />
+            </span>
         <span slot="action" slot-scope="text, record">
               <a @click.prevent='contentEdit(record)'>编辑</a>
               <a-divider type="vertical" />
@@ -42,42 +45,44 @@
           :wrapper-col="formItemLayout.wrapperCol"
           label="类型名称"
         >
-          <a-input v-decorator="['flowerTypeName']" placeholder="Please input your flowerTypeName" />
+          <a-input v-decorator="['flowerTypeName',{rules: [
+              {
+                required: true,
+                message: 'Please input your flowerTypeName!',
+              },
+            ]}]" placeholder="Please input your flowerTypeName" />
         </a-form-item>
         <a-form-item
           :label-col="formItemLayout.labelCol"
           :wrapper-col="formItemLayout.wrapperCol"
           label="类型描述"
         >
-          <a-input v-decorator="['flowerTypeDescribe']" placeholder="Please input your flowerTypeDescribe" />
+          <a-input v-decorator="['flowerTypeDescribe',{rules: [
+              {
+                required: true,
+                message: 'Please input your flowerTypeName!',
+              },
+            ]}]" placeholder="Please input your flowerTypeDescribe" />
         </a-form-item>
         <a-form-item
           :label-col="formItemLayout.labelCol"
           :wrapper-col="formItemLayout.wrapperCol"
           label="排序"
         >
-          <a-input v-decorator="['sort']" placeholder="Please input your sort" />
-        </a-form-item>
-        <a-form-item
-          :label-col="formItemLayout.labelCol"
-          :wrapper-col="formItemLayout.wrapperCol"
-          label="类型ID"
-        >
-          <a-input v-decorator="['id']" placeholder="Please input your id" />
+          <a-input v-decorator="['sort',{rules: [
+              {
+                required: true,
+                message: 'Please input your flowerTypeName!',
+              },
+            ]}]" placeholder="Please input your sort" />
         </a-form-item>
         <a-form-item
           :label-col="formItemLayout.labelCol"
           :wrapper-col="formItemLayout.wrapperCol"
           label="上级分类ID"
         >
-          <a-input v-decorator="['topId']" placeholder="Please input your id" />
-        </a-form-item>
-        <a-form-item
-          :label-col="formItemLayout.labelCol"
-          :wrapper-col="formItemLayout.wrapperCol"
-          label="类型级别"
-        >
-          <a-input v-decorator="['level']" type='number' placeholder="Please input your id" />
+          <a-cascader
+            v-decorator="['topId',{defaultValue:[]}]"  :options="options" change-on-select expand-trigger="hover" placeholder="Please select" />
         </a-form-item>
         <a-form-item label="类型图片上传">
           <a-upload
@@ -119,6 +124,12 @@ const columns = [
     title: 'id',
     dataIndex: 'value',
     key: 'value'
+  },
+  {
+    title: '缩略图',
+    dataIndex: 'imgUrl',
+    key: 'imgUrl',
+    scopedSlots: { customRender: 'iconSrc' },
   },
   {
     title: '操作',
@@ -187,6 +198,26 @@ export default {
       });
       return newarr;
     },
+    mapTree2(value, arr){
+      let newarr = [];
+      arr.forEach(element => {
+        if (element.value==value) { // 判断条件
+          newarr.push(element);
+        } else {
+          if (element.children && element.children.length > 0) {
+            let redata = this.mapTree2(value, element.children);
+            if (redata && redata.length > 0) {
+              let obj = {
+                ...element,
+                children: redata
+              };
+              newarr.push(obj);
+            }
+          }
+        }
+      });
+      return newarr;
+    },
     getTypeTree(){
       this.btnLoading2 = true
       getTypeTree().then(res=>{
@@ -202,12 +233,17 @@ export default {
     contentEdit(record){
       this.uploadVisible = true;
       this.addTitle = "编辑分类"
+      this.typeImg = [];
       this.$nextTick(()=>{
+        let arr = this.mapTree2(record.parentId,this.options)
         this.form.setFieldsValue({'typeImg':'https://file.skyclound.com/upload/flower/'+record.imgUrl})
         this.form.setFieldsValue({'flowerTypeName':record.label})
-        this.form.setFieldsValue({'id':record.value})
-        this.form.setFieldsValue({'level':record.level})
-        this.form.setFieldsValue({'topId':record.parentId})
+        this.form.setFieldsValue({'flowerTypeDescribe':record.code})
+        if (arr.length>0){
+          this.form.setFieldsValue({'topId':[arr[0].value,record.parentId]})
+        }else {
+          this.form.setFieldsValue({'topId':[record.parentId]})
+        }
       })
 
       console.log(record)
@@ -221,6 +257,8 @@ export default {
     // 新建
     showModal() {
       this.uploadVisible = true;
+      this.form.resetFields();
+      this.typeImg = [];
     },
     // 对话框取消
     handleCancel() {
@@ -229,8 +267,18 @@ export default {
     handleSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
+        console.log(values)
         if (!err) {
           console.log(values)
+          if (values.topId.length==3){
+            values.topId = values.topId[1]
+          }else if(values.topId.length==0){
+            values.topId = 0
+          }else if(values.topId.length==1){
+            values.topId = values.topId[0]
+          }else if(values.topId.length==2){
+            values.topId = values.topId[1]
+          }
           flowerSaveOrUpdate(values).then(res=>{
             this.$tips.success(this.addTitle+'成功！')
             this.getTypeTree()

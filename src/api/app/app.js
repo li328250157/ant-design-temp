@@ -10,8 +10,17 @@ const api = {
   deleteEmail:'/googleUser/removeGoogleById',
   TypeTree:'/flowerType/getFLowerTypeList',
   fileUpload:'/file/layeditUpload',
+  getHtml:'/file/getDocx',
   flowerList:'/flower/getFLowerList',
-  deleteFlower:'/flower/flowerDelById'
+  deleteFlower:'/flower/flowerDelById',
+  getAuthor:'/author/getAuthorRand',
+}
+export function getAuthor(parameter) {
+  return request({
+    url: api.getAuthor,
+    method: 'post',
+    data: parameter
+  })
 }
 export function deleteFlower(parameter) {
   return request({

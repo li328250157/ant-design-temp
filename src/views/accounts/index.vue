@@ -6,7 +6,7 @@
           <a-button type='primary' @click='exportExcel'>导出excel</a-button>
         </a-col>
       </a-row>
-      <a-table :columns='columns' rowKey='artifactId' :data-source='tableData'  :loading="btnLoading2" style='background: #FFFFFF' bordered :pagination='false'>
+      <a-table :columns='columns' rowKey='id' :data-source='tableData'  :loading="btnLoading2" style='background: #FFFFFF' bordered :pagination='false'>
         <span slot="action" slot-scope="text, record">
               <a @click.prevent='contentDelete(record)'>删除</a>
         </span>
