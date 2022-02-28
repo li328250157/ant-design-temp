@@ -18,7 +18,7 @@
               </a-tag>
             </span>
         <span slot='iconSrc' slot-scope='iconSrc'>
-                <a-avatar  shape="square" :size="100" :src="'https://file.skyclound.com/upload/flower'+iconSrc" />
+                <a-avatar  shape="square" :size="100" :src="iconSrc" />
             </span>
         <span slot="action" slot-scope="text, record">
               <a @click.prevent='contentEdit(record)'>编辑</a>
@@ -96,7 +96,31 @@
           >
             <a-button> <a-icon type="upload" /> Click to upload </a-button>
           </a-upload>
-          <a-input v-decorator="['typeImg']" placeholder="Please input your topId" />
+          <a-input v-decorator="['typeImg',{rules: [
+              {
+                required: true,
+                message: 'Please input your typeImg!',
+              },
+            ]}]" placeholder="Please input your topId" />
+        </a-form-item>
+        <a-form-item label="类型大图上传">
+          <a-upload
+            name="file"
+            list-type="picture"
+            accept='image/*'
+            :multiple="false"
+            action="http://121.201.66.113:9097//file/layeditUpload"
+            :file-list="bigList"
+            @change="handleChange"
+          >
+            <a-button> <a-icon type="upload" /> Click to upload </a-button>
+          </a-upload>
+          <a-input v-decorator="['bigImg',{rules: [
+              {
+                required: true,
+                message: 'Please input your bigImg!',
+              },
+            ]}]" placeholder="Please input your bigImg" />
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 12, offset: 6 }">
           <a-button type="primary" html-type="submit">
@@ -153,6 +177,7 @@ export default {
       uploadVisible:false,
       confirmLoading: false,
       typeList: [],
+      bigList:[],
       options:[],
       total:0,
       page:0,
@@ -298,6 +323,21 @@ export default {
         return file;
       });
       this.typeList = fileList;
+    },
+    handleChange(file) {
+      let fileList = [...file.fileList];
+      fileList = fileList.slice(-1);
+      fileList = fileList.map(file => {
+        if (file.response) {
+          // Component will show file.url as link
+          file.url = file.response.data.src;
+          this.$nextTick(()=>{
+            this.form.setFieldsValue({'bigImg':file.response.data.src})
+          })
+        }
+        return file;
+      });
+      this.bigList = fileList;
     },
   }
 }
