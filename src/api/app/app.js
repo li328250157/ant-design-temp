@@ -3,6 +3,7 @@ import request from '@/utils/request2'
 const api = {
   flowerTypeList:'/flowerType/getFLowerTypeList',
   flowerSaveOrUpdate:'/flowerType/flowerSaveOrUpdate',
+  flower2SaveOrUpdate:'/flower/flowerSaveOrUpdate',
   delFlowerTypeById:'/flowerType/delFlowerTypeById',
   commentList:'/comment/getCommentList',
   deleteComment:'/comment/removeCommentById',
@@ -39,6 +40,13 @@ export function getFlowerList(parameter) {
 export function flowerSaveOrUpdate(parameter) {
   return request({
     url: api.flowerSaveOrUpdate,
+    method: 'post',
+    data: parameter
+  })
+}
+export function flower2SaveOrUpdate(parameter) {
+  return request({
+    url: api.flower2SaveOrUpdate,
     method: 'post',
     data: parameter
   })

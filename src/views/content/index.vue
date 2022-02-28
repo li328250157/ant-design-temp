@@ -260,7 +260,7 @@
 </template>
 
 <script>
-import { flowerSaveOrUpdate, getFlowerList, getTypeTree, deleteFlower ,getAuthor } from '@/api/app/app'
+import { flower2SaveOrUpdate, getFlowerList, getTypeTree, deleteFlower ,getAuthor } from '@/api/app/app'
 import tinymce from "./tinymce";
 import mammoth from "mammoth";
 const columns = [
@@ -436,10 +436,10 @@ export default {
           values.tagUrl = values.tagUrl.join(',')
           delete  values.typeName
           console.log(values)
-          flowerSaveOrUpdate(values).then(res=>{
-            console.log(res)
+          flower2SaveOrUpdate(values).then(res=>{
             if (res.status == 200){
               this.$tips.success('新增成功！')
+              this.getFlowerList()
               this.uploadVisible = false
             }else {
               this.$tips.warning(res.message)
