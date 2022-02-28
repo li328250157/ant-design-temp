@@ -60,7 +60,7 @@
           <a-input v-decorator="['flowerTypeDescribe',{rules: [
               {
                 required: true,
-                message: 'Please input your flowerTypeName!',
+                message: 'Please input your flowerTypeDescribe!',
               },
             ]}]" placeholder="Please input your flowerTypeDescribe" />
         </a-form-item>
@@ -72,7 +72,7 @@
           <a-input v-decorator="['sort',{rules: [
               {
                 required: true,
-                message: 'Please input your flowerTypeName!',
+                message: 'Please input your sort!',
               },
             ]}]" placeholder="Please input your sort" />
         </a-form-item>
@@ -91,15 +91,12 @@
             accept='image/*'
             :multiple="false"
             action="http://121.201.66.113:9097//file/layeditUpload"
-            :file-list="typeImg"
+            :file-list="typeList"
             @change="handleChange2"
           >
             <a-button> <a-icon type="upload" /> Click to upload </a-button>
-            <a-input
-              v-decorator="['typeImg']"
-              placeholder="Please input your topId"
-            />
           </a-upload>
+          <a-input v-decorator="['typeImg']" placeholder="Please input your topId" />
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 12, offset: 6 }">
           <a-button type="primary" html-type="submit">
@@ -155,7 +152,7 @@ export default {
       btnLoading:false,
       uploadVisible:false,
       confirmLoading: false,
-      typeImg: [],
+      typeList: [],
       options:[],
       total:0,
       page:0,
@@ -233,7 +230,7 @@ export default {
     contentEdit(record){
       this.uploadVisible = true;
       this.addTitle = "编辑分类"
-      this.typeImg = [];
+      this.typeList = [];
       this.$nextTick(()=>{
         let arr = this.mapTree2(record.parentId,this.options)
         this.form.setFieldsValue({'typeImg':'https://file.skyclound.com/upload/flower/'+record.imgUrl})
@@ -258,7 +255,7 @@ export default {
     showModal() {
       this.uploadVisible = true;
       this.form.resetFields();
-      this.typeImg = [];
+      this.typeList = [];
     },
     // 对话框取消
     handleCancel() {
@@ -300,7 +297,7 @@ export default {
         }
         return file;
       });
-      this.typeImg = fileList;
+      this.typeList = fileList;
     },
   }
 }
