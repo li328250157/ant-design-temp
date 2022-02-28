@@ -372,8 +372,8 @@ export default {
       console.log(record)
       this.uploadVisible = true;
       this.$nextTick(()=>{
-        this.form.setFieldsValue({'generateAuthor':Boolean(record.generateAuthor)})
-        this.form.setFieldsValue({'generateHtml':Boolean(record.generateHtml)})
+        this.form.setFieldsValue({'generateAuthor':Boolean(Number(record.generateAuthor))})
+        this.form.setFieldsValue({'generateHtml':Boolean(Number(record.generateHtml))})
         this.form.setFieldsValue({'showType':record.showType})
         this.form.setFieldsValue({'tag':record.tag.split(',')})
         this.form.setFieldsValue({'tagUrl':record.tagUrl.split(',')})
@@ -429,8 +429,8 @@ export default {
           values.typeFirst = Number(values.typeName[0])||0
           values.typeSecond = Number(values.typeName[1])||0
           values.typeThird = Number(values.typeName[2])||0
-          values.generateAuthor =  values.generateAuthor?0:1
-          values.generateHtml =  values.generateHtml?0:1
+          values.generateAuthor =  values.generateAuthor?1:0
+          values.generateHtml =  values.generateHtml?1:0
           values.htmlText = this.richText
           values.tag = values.tag.join(',')
           values.tagUrl = values.tagUrl.join(',')
