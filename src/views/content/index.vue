@@ -19,7 +19,7 @@
               />
             </span>
            <span slot='iconSrc' slot-scope='iconSrc'>
-                <a-avatar  shape="square" :size="200" :src="'https://file.skyclound.com/upload/flower'+iconSrc" />
+                <a-avatar  shape="square" :size="200" :src="iconSrc" />
             </span>
             <span slot="action" slot-scope="text, record">
               <a @click.prevent='contentEdit(record)'>编辑</a>
@@ -140,6 +140,7 @@
           </a-select>
         </a-form-item>
         <a-form-item
+          v-if='form.getFieldValue("showType")!=4'
           :label-col="formItemLayout.labelCol"
           :wrapper-col="formItemLayout.wrapperCol"
           label="word解析"
@@ -158,6 +159,7 @@
           </a-upload>
         </a-form-item>
         <a-form-item
+          v-if='form.getFieldValue("showType")!=4'
           :label-col="formItemLayout.labelCol"
           :wrapper-col="formItemLayout.wrapperCol"
           label="富文本"
@@ -165,23 +167,28 @@
           <tinymce ref='tin' :richText='richText' @updateContent='updateContent' />
         </a-form-item>
         <a-form-item label="展示类型">
-          <a-radio-group v-decorator="['showType']" @change='changeShowType'>
-            <a-radio-button value="1">
+          <a-select  v-decorator="['showType',{defaultValue:1,rules: [
+              {
+                required: true,
+                message: 'Please input your showType!',
+              },
+            ]}]" @change='changeShowType'>
+            <a-select-option value="1">
               大图文
-            </a-radio-button>
-            <a-radio-button value="2">
+            </a-select-option>
+            <a-select-option value="2">
               三图
-            </a-radio-button>
-            <a-radio-button value="3">
+            </a-select-option>
+            <a-select-option value="3">
               文字
-            </a-radio-button>
-            <a-radio-button value="4">
+            </a-select-option>
+            <a-select-option value="4">
               视频
-            </a-radio-button>
-            <a-radio-button value="5">
+            </a-select-option>
+            <a-select-option value="5">
               小图文
-            </a-radio-button>
-          </a-radio-group>
+            </a-select-option>
+          </a-select>
         </a-form-item>
         <a-form-item label="封面图" v-if='form.getFieldValue("showType")==1||form.getFieldValue("showType")==5||form.getFieldValue("showType")==4'  :label-col="formItemLayout.labelCol" :wrapper-col="formItemLayout.wrapperCol">
           <a-upload
@@ -190,7 +197,7 @@
             accept='image/*'
             :multiple="false"
             action="http://121.201.66.113:9097/file/layeditUpload"
-            :file-list="typeImg"
+            :file-list="bigImg"
             @change="handleChange"
           >
             <a-button> <a-icon type="upload" /> Click to upload </a-button>
@@ -210,14 +217,56 @@
             name="file"
             list-type="picture"
             accept='image/*'
-            action="http://121.201.66.113:9097//file/layeditUpload"
-            :file-list="typeImg"
+            action="http://121.201.66.113:9097/file/layeditUpload"
+            :file-list="typeImg1"
             @change="handleChange2"
           >
             <a-button> <a-icon type="upload" /> Click to upload </a-button>
           </a-upload>
           <a-input
-            v-decorator="['iconSrc',{rules: [
+            v-decorator="['iconSrc1',{rules: [
+              {
+                required: true,
+                message: 'Please input your iconSrc!',
+              },
+            ]}]"
+            placeholder="Please input your iconSrc"
+          />
+        </a-form-item>
+        <a-form-item label="封面图" v-if='form.getFieldValue("showType")==2'  :label-col="formItemLayout.labelCol" :wrapper-col="formItemLayout.wrapperCol">
+          <a-upload
+            name="file"
+            list-type="picture"
+            accept='image/*'
+            action="http://121.201.66.113:9097/file/layeditUpload"
+            :file-list="typeImg2"
+            @change="handleChange4"
+          >
+            <a-button> <a-icon type="upload" /> Click to upload </a-button>
+          </a-upload>
+          <a-input
+            v-decorator="['iconSrc2',{rules: [
+              {
+                required: true,
+                message: 'Please input your iconSrc!',
+              },
+            ]}]"
+            placeholder="Please input your iconSrc"
+          />
+        </a-form-item>
+        <a-form-item label="封面图" v-if='form.getFieldValue("showType")==2'  :label-col="formItemLayout.labelCol" :wrapper-col="formItemLayout.wrapperCol">
+          <a-upload
+            name="file"
+            list-type="picture"
+            accept='image/*'
+            action="http://121.201.66.113:9097/file/layeditUpload"
+            :file-list="typeImg3"
+            @change="handleChange5"
+          >
+            <a-button> <a-icon type="upload" /> Click to upload </a-button>
+          </a-upload>
+          <a-input
+            v-decorator="['iconSrc3',{rules: [
               {
                 required: true,
                 message: 'Please input your iconSrc!',
@@ -231,7 +280,7 @@
             name="file"
             list-type="picture"
             :multiple="false"
-            action="http://121.201.66.113:9097//file/layeditUpload"
+            action="http://121.201.66.113:9097/file/layeditUpload"
             :file-list="videoList"
             @change="handleChange3"
           >
@@ -314,7 +363,10 @@ export default {
       btnLoading:false,
       uploadVisible:false,
       confirmLoading: false,
-      typeImg: [],
+      typeImg1: [],
+      typeImg2: [],
+      typeImg3: [],
+      bigImg:[],
       wordList:[],
       options:[],
       videoList:[],
@@ -372,9 +424,18 @@ export default {
       console.log(record)
       this.uploadVisible = true;
       this.$nextTick(()=>{
+        this.form.setFieldsValue({'showType':record.showType})
+          this.$nextTick(()=>{
+            if (record.showType==2){
+              this.form.setFieldsValue({'iconSrc1':record.iconSrc.split(',')[0]})
+              this.form.setFieldsValue({'iconSrc2':record.iconSrc.split(',')[1]})
+              this.form.setFieldsValue({'iconSrc3':record.iconSrc.split(',')[2]})
+            }else{
+              this.form.setFieldsValue({'iconSrc':record.iconSrc})
+            }
+          })
         this.form.setFieldsValue({'generateAuthor':Boolean(Number(record.generateAuthor))})
         this.form.setFieldsValue({'generateHtml':Boolean(Number(record.generateHtml))})
-        this.form.setFieldsValue({'showType':record.showType})
         this.form.setFieldsValue({'tag':record.tag.split(',')})
         this.form.setFieldsValue({'tagUrl':record.tagUrl.split(',')})
         this.form.setFieldsValue({'title':record.title})
@@ -383,7 +444,6 @@ export default {
         this.form.setFieldsValue({'videoSrc':record.videoSrc})
         this.form.setFieldsValue({'typeName':[record.typeFirst,record.typeSecond,record.typeThird]})
         this.richText= record.htmlText
-        this.form.setFieldsValue({'iconSrc':record.iconSrc})
       })
     },
     updateContent(value){
@@ -401,6 +461,10 @@ export default {
       this.uploadVisible = true;
       this.form.resetFields()
       this.richText =""
+      this.typeImg= []
+      this.bigImg = []
+      this.videoList= []
+      this.wordList= []
       this.$nextTick(()=>{
         this.form.setFieldsValue({'generateAuthor':true})
         this.form.setFieldsValue({'generateHtml':true})
@@ -411,7 +475,8 @@ export default {
     },
     changeShowType(){
       this.$nextTick(()=> {
-         this.typeImg= []
+        this.typeImg= []
+        this.bigImg = []
         this.videoList= []
         this.wordList= []
         this.form.setFieldsValue({ 'iconSrc': '' })
@@ -424,8 +489,16 @@ export default {
     handleSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
+        console.log(values)
+        console.log(err)
         if (!err) {
           this.btnLoading = true
+          if (values.showType==2){
+            values.iconSrc = values.iconSrc1+','+values.iconSrc2+','+values.iconSrc3;
+            delete  values.iconSrc1
+            delete  values.iconSrc2
+            delete  values.iconSrc3
+          }
           values.typeFirst = Number(values.typeName[0])||0
           values.typeSecond = Number(values.typeName[1])||0
           values.typeThird = Number(values.typeName[2])||0
@@ -467,11 +540,11 @@ export default {
         }
         return file;
       });
-      this.typeImg = fileList;
+      this.bigImg = fileList;
     },
     handleChange2(file) {
       let fileList = [...file.fileList];
-      fileList = fileList.slice(-3);
+      fileList = fileList.slice(-1);
       let testmsg = /^image\/(jpeg|png|jpg|pjp|svg|tiff|ico|webp|gif)$/.test(file.file.type)
       if (!testmsg){
         this.$tips.warning('请上传图片格式！');
@@ -482,16 +555,52 @@ export default {
           // Component will show file.url as link
           file.url = file.response.data.src;
           this.$nextTick(()=>{
-            let str = []
-            for (let i = 0; i < fileList.length; i++) {
-              str.push(fileList[i].url)
-            }
-            this.form.setFieldsValue({'iconSrc':str.join(',')})
+            this.form.setFieldsValue({'iconSrc1':file.response.data.src})
           })
         }
         return file;
       });
-      this.typeImg = fileList;
+      this.typeImg1 = fileList;
+    },
+    handleChange4(file) {
+      let fileList = [...file.fileList];
+      fileList = fileList.slice(-1);
+      let testmsg = /^image\/(jpeg|png|jpg|pjp|svg|tiff|ico|webp|gif)$/.test(file.file.type)
+      if (!testmsg){
+        this.$tips.warning('请上传图片格式！');
+        return false;
+      }
+      fileList = fileList.map(file => {
+        if (file.response) {
+          // Component will show file.url as link
+          file.url = file.response.data.src;
+          this.$nextTick(()=>{
+            this.form.setFieldsValue({'iconSrc2':file.response.data.src})
+          })
+        }
+        return file;
+      });
+      this.typeImg2 = fileList;
+    },
+    handleChange5(file) {
+      let fileList = [...file.fileList];
+      fileList = fileList.slice(-1);
+      let testmsg = /^image\/(jpeg|png|jpg|pjp|svg|tiff|ico|webp|gif)$/.test(file.file.type)
+      if (!testmsg){
+        this.$tips.warning('请上传图片格式！');
+        return false;
+      }
+      fileList = fileList.map(file => {
+        if (file.response) {
+          // Component will show file.url as link
+          file.url = file.response.data.src;
+          this.$nextTick(()=>{
+            this.form.setFieldsValue({'iconSrc3':file.response.data.src})
+          })
+        }
+        return file;
+      });
+      this.typeImg3 = fileList;
     },
     handleChange3(file) {
       let fileList = [...file.fileList];

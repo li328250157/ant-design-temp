@@ -90,7 +90,7 @@ export default {
         pushStr(tag,tagUrl){
           let str = ""
           for (let i = 0; i < tag.length; i++) {
-            str+=`<a href="${tagUrl[i]}" target="_blank" rel="noopener" data-mce-href="${tag[i]}" data-mce-selected="inline-boundary">${tag[i]}</a>,`
+            str+=`<a href=${tagUrl[i]} target="_blank" rel="noopener" data-mce-href=${tagUrl[i]} data-mce-selected="inline-boundary">${tag[i]}</a>,`
           }
           tinymce.activeEditor.insertContent(str);
         }

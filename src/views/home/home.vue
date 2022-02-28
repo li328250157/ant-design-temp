@@ -123,7 +123,7 @@
             ]}]" placeholder="Please input your bigImg" />
         </a-form-item>
         <a-form-item :wrapper-col="{ span: 12, offset: 6 }">
-          <a-button type="primary" html-type="submit">
+          <a-button type="primary" html-type="submit" :loading='btnLoading'>
             Submit
           </a-button>
         </a-form-item>
@@ -258,9 +258,11 @@ export default {
       this.typeList = [];
       this.$nextTick(()=>{
         let arr = this.mapTree2(record.parentId,this.options)
-        this.form.setFieldsValue({'typeImg':'https://file.skyclound.com/upload/flower/'+record.imgUrl})
+        this.form.setFieldsValue({'typeImg':record.imgUrl})
         this.form.setFieldsValue({'flowerTypeName':record.label})
         this.form.setFieldsValue({'flowerTypeDescribe':record.code})
+        this.form.setFieldsValue({'bigImg':record.bigImg})
+        this.form.setFieldsValue({'sort':record.sort})
         if (arr.length>0){
           this.form.setFieldsValue({'topId':[arr[0].value,record.parentId]})
         }else {
@@ -281,6 +283,9 @@ export default {
       this.uploadVisible = true;
       this.form.resetFields();
       this.typeList = [];
+      this.$nextTick(()=>{
+        this.form.setFieldsValue({'topId':[]})
+      })
     },
     // 对话框取消
     handleCancel() {
@@ -290,8 +295,8 @@ export default {
       e.preventDefault();
       this.form.validateFields((err, values) => {
         console.log(values)
+        this.btnLoading = true
         if (!err) {
-          console.log(values)
           if (values.topId.length==3){
             values.topId = values.topId[1]
           }else if(values.topId.length==0){
@@ -304,7 +309,10 @@ export default {
           flowerSaveOrUpdate(values).then(res=>{
             this.$tips.success(this.addTitle+'成功！')
             this.getTypeTree()
+            this.btnLoading = false
             this.uploadVisible = false
+          }).catch(err=>{
+            this.btnLoading = false
           })
         }
       });
