@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="zh-cmn-Hans"><head><meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="/logo.png"><title>信息流管理系统</title><style>.first-loading-wrp {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      min-height: 420px;
+      height: 100%
+    }
+
+    .first-loading-wrp>h1 {
+      font-size: 128px
+    }
+
+    .first-loading-wrp .loading-wrp {
+      padding: 98px;
+      display: flex;
+      justify-content: center;
+      align-items: center
+    }
+
+    .dot {
+      animation: antRotate 1.2s infinite linear;
+      transform: rotate(45deg);
+      position: relative;
+      display: inline-block;
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+      box-sizing: border-box
+    }
+
+    .dot i {
+      width: 14px;
+      height: 14px;
+      position: absolute;
+      display: block;
+      background-color: #1890ff;
+      border-radius: 100%;
+      transform: scale(.75);
+      transform-origin: 50% 50%;
+      opacity: .3;
+      animation: antSpinMove 1s infinite linear alternate
+    }
+
+    .dot i:nth-child(1) {
+      top: 0;
+      left: 0
+    }
+
+    .dot i:nth-child(2) {
+      top: 0;
+      right: 0;
+      -webkit-animation-delay: .4s;
+      animation-delay: .4s
+    }
+
+    .dot i:nth-child(3) {
+      right: 0;
+      bottom: 0;
+      -webkit-animation-delay: .8s;
+      animation-delay: .8s
+    }
+
+    .dot i:nth-child(4) {
+      bottom: 0;
+      left: 0;
+      -webkit-animation-delay: 1.2s;
+      animation-delay: 1.2s
+    }
+
+    @keyframes antRotate {
+      to {
+        -webkit-transform: rotate(405deg);
+        transform: rotate(405deg)
+      }
+    }
+
+    @-webkit-keyframes antRotate {
+      to {
+        -webkit-transform: rotate(405deg);
+        transform: rotate(405deg)
+      }
+    }
+
+    @keyframes antSpinMove {
+      to {
+        opacity: 1
+      }
+    }
+
+    @-webkit-keyframes antSpinMove {
+      to {
+        opacity: 1
+      }
+    }</style><link href="/css/chunk-1b4081aa.41601290.css" rel="prefetch"><link href="/css/chunk-688fc829.f626e4e9.css" rel="prefetch"><link href="/css/user.0d8a451c.css" rel="prefetch"><link href="/js/chunk-16b4a087.680d73e4.js" rel="prefetch"><link href="/js/chunk-1b4081aa.ac90ea31.js" rel="prefetch"><link href="/js/chunk-2d237d41.b6713e08.js" rel="prefetch"><link href="/js/chunk-688fc829.9bd8c9f4.js" rel="prefetch"><link href="/js/chunk-7492bd5d.30865700.js" rel="prefetch"><link href="/js/chunk-7eb9d778.0d742ab0.js" rel="prefetch"><link href="/js/fail.f965e9f1.js" rel="prefetch"><link href="/js/lang-en-US-account-settings.3c72c5de.js" rel="prefetch"><link href="/js/lang-en-US-account.2badf438.js" rel="prefetch"><link href="/js/lang-en-US-dashboard-analysis.7eca1965.js" rel="prefetch"><link href="/js/lang-en-US-dashboard.7e9fdf8b.js" rel="prefetch"><link href="/js/lang-en-US-form-basicForm.10295603.js" rel="prefetch"><link href="/js/lang-en-US-form.16b6eff0.js" rel="prefetch"><link href="/js/lang-en-US-global.5721b205.js" rel="prefetch"><link href="/js/lang-en-US-menu.53d2343f.js" rel="prefetch"><link href="/js/lang-en-US-result-fail.b5694f4b.js" rel="prefetch"><link href="/js/lang-en-US-result-success.1caaa704.js" rel="prefetch"><link href="/js/lang-en-US-result.78e06a32.js" rel="prefetch"><link href="/js/lang-en-US-setting.f1062b98.js" rel="prefetch"><link href="/js/lang-en-US-user.527bc1b4.js" rel="prefetch"><link href="/js/lang-en-US.fa712e1f.js" rel="prefetch"><link href="/js/user.a1c0138d.js" rel="prefetch"><link href="/css/app.59857bb8.css" rel="preload" as="style"><link href="/css/chunk-vendors.28365b83.css" rel="preload" as="style"><link href="/js/app.6cf2a2d0.js" rel="preload" as="script"><link href="/js/chunk-vendors.c2a35281.js" rel="preload" as="script"><link href="/css/chunk-vendors.28365b83.css" rel="stylesheet"><link href="/css/app.59857bb8.css" rel="stylesheet"></head><body><noscript><strong>We're sorry but vue-antd-pro doesn't work properly without JavaScript enabled. Please enable it to continue.</strong></noscript><div id="app"><div class="first-loading-wrp"><h1></h1><div class="loading-wrp"><span class="dot dot-spin"><i></i><i></i><i></i><i></i></span></div><div style="display: flex; justify-content: center; align-items: center;">信息流后台管理系统</div></div></div><script src="/js/chunk-vendors.c2a35281.js"></script><script src="/js/app.6cf2a2d0.js"></script></body></html>

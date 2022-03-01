@@ -463,6 +463,7 @@ export default {
     },
     showModal() {
       this.uploadVisible = true;
+      this.editversion =true;
       this.title = "新增文章"
       this.form.resetFields()
       this.richText =""
