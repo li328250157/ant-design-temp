@@ -38,7 +38,7 @@
       </a-row>
     </a-card>
     <a-modal
-      title="新增文章"
+      :title="title"
       :visible="uploadVisible"
       :confirm-loading="confirmLoading"
       @cancel="handleCancel"
@@ -159,12 +159,11 @@
           </a-upload>
         </a-form-item>
         <a-form-item
-          v-if='form.getFieldValue("showType")!=4'
           :label-col="formItemLayout.labelCol"
           :wrapper-col="formItemLayout.wrapperCol"
           label="富文本"
         >
-          <tinymce ref='tin' :richText='richText' @updateContent='updateContent' />
+          <tinymce   v-if="editversion"  ref='tin' :richText='richText' @updateContent='updateContent' />
         </a-form-item>
         <a-form-item label="展示类型">
           <a-select  v-decorator="['showType',{defaultValue:1,rules: [
@@ -347,6 +346,7 @@ export default {
   data() {
     return {
       columns,
+      editversion:false,
       formItemLayout: {
         labelCol: { span: 4 },
         wrapperCol: { span: 20 },
@@ -357,6 +357,8 @@ export default {
         level:'',
         topId:''
       },
+      rowData:{},
+      title:"新增文章",
       richText:'',
       tableData:[],
       btnLoading2:false,
@@ -421,9 +423,11 @@ export default {
       this.getFlowerList();
     },
     contentEdit(record){
-      console.log(record)
       this.uploadVisible = true;
+      this.title = "编辑文章"
+      this.rowData = record;
       this.$nextTick(()=>{
+        this.editversion =true;
         this.form.setFieldsValue({'showType':record.showType})
           this.$nextTick(()=>{
             if (record.showType==2){
@@ -433,6 +437,7 @@ export default {
             }else{
               this.form.setFieldsValue({'iconSrc':record.iconSrc})
             }
+            this.richText= record.htmlText
           })
         this.form.setFieldsValue({'generateAuthor':Boolean(Number(record.generateAuthor))})
         this.form.setFieldsValue({'generateHtml':Boolean(Number(record.generateHtml))})
@@ -443,7 +448,6 @@ export default {
         this.form.setFieldsValue({'describe':record.describe})
         this.form.setFieldsValue({'videoSrc':record.videoSrc})
         this.form.setFieldsValue({'typeName':[record.typeFirst,record.typeSecond,record.typeThird]})
-        this.richText= record.htmlText
       })
     },
     updateContent(value){
@@ -459,6 +463,7 @@ export default {
     },
     showModal() {
       this.uploadVisible = true;
+      this.title = "新增文章"
       this.form.resetFields()
       this.richText =""
       this.typeImg= []
@@ -485,12 +490,11 @@ export default {
     // 对话框取消
     handleCancel() {
       this.uploadVisible = false;
+      this.editversion =false;
     },
     handleSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
-        console.log(values)
-        console.log(err)
         if (!err) {
           this.btnLoading = true
           if (values.showType==2){
@@ -498,6 +502,9 @@ export default {
             delete  values.iconSrc1
             delete  values.iconSrc2
             delete  values.iconSrc3
+          }
+          if (this.title=="编辑文章"){
+            values.id = this.rowData.id
           }
           values.typeFirst = Number(values.typeName[0])||0
           values.typeSecond = Number(values.typeName[1])||0
@@ -534,9 +541,14 @@ export default {
         if (file.response) {
           // Component will show file.url as link
           file.url = file.response.data.src;
-          this.$nextTick(()=>{
-            this.form.setFieldsValue({'iconSrc':file.response.data.src})
-          })
+          if (file.response.data.src){
+            this.$nextTick(()=>{
+              this.form.setFieldsValue({'iconSrc':file.response.data.src})
+            })
+          }else{
+            this.bigImg = [];
+            this.$tips.warning('请求超时,请重新上传！')
+          }
         }
         return file;
       });
@@ -554,9 +566,14 @@ export default {
         if (file.response) {
           // Component will show file.url as link
           file.url = file.response.data.src;
-          this.$nextTick(()=>{
-            this.form.setFieldsValue({'iconSrc1':file.response.data.src})
-          })
+          if (file.response.data.src){
+            this.$nextTick(()=>{
+              this.form.setFieldsValue({'iconSrc1':file.response.data.src})
+            })
+          }else{
+            this.typeImg1 = [];
+            this.$tips.warning('请求超时,请重新上传！')
+          }
         }
         return file;
       });
@@ -574,9 +591,14 @@ export default {
         if (file.response) {
           // Component will show file.url as link
           file.url = file.response.data.src;
-          this.$nextTick(()=>{
-            this.form.setFieldsValue({'iconSrc2':file.response.data.src})
-          })
+          if (file.response.data.src){
+            this.$nextTick(()=>{
+              this.form.setFieldsValue({'iconSrc2':file.response.data.src})
+            })
+          }else{
+            this.typeImg2 = [];
+            this.$tips.warning('请求超时,请重新上传！')
+          }
         }
         return file;
       });
@@ -594,9 +616,14 @@ export default {
         if (file.response) {
           // Component will show file.url as link
           file.url = file.response.data.src;
-          this.$nextTick(()=>{
-            this.form.setFieldsValue({'iconSrc3':file.response.data.src})
-          })
+          if (file.response.data.src){
+            this.$nextTick(()=>{
+              this.form.setFieldsValue({'iconSrc3':file.response.data.src})
+            })
+          }else{
+            this.typeImg3 = [];
+            this.$tips.warning('请求超时,请重新上传！')
+          }
         }
         return file;
       });
@@ -614,9 +641,14 @@ export default {
         if (file.response) {
           // Component will show file.url as link
           file.url = file.response.data.src;
-          this.$nextTick(()=>{
-            this.form.setFieldsValue({'videoSrc':file.response.data.src})
-          })
+          if (file.response.data.src){
+            this.$nextTick(()=>{
+              this.form.setFieldsValue({'videoSrc':file.response.data.src})
+            })
+          }else{
+            this.videoList = [];
+            this.$tips.warning('请求超时,请重新上传！')
+          }
         }
         return file;
       });

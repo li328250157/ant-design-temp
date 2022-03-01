@@ -256,6 +256,7 @@ export default {
       this.uploadVisible = true;
       this.addTitle = "编辑分类"
       this.typeList = [];
+      this.bigList = [];
       this.$nextTick(()=>{
         let arr = this.mapTree2(record.parentId,this.options)
         this.form.setFieldsValue({'typeImg':record.imgUrl})
@@ -273,7 +274,8 @@ export default {
       console.log(record)
     },
     contentDelete(record){
-      delFlowerTypeById({ id:record.id }).then(res=>{
+      console.log(record)
+      delFlowerTypeById({ id:record.value }).then(res=>{
         this.$tips.success('删除成功！')
         this.getTypeTree()
       })
@@ -282,7 +284,9 @@ export default {
     showModal() {
       this.uploadVisible = true;
       this.form.resetFields();
+      this.addTitle = "新增分类"
       this.typeList = [];
+      this.bigList = [];
       this.$nextTick(()=>{
         this.form.setFieldsValue({'topId':[]})
       })
@@ -324,9 +328,14 @@ export default {
         if (file.response) {
           // Component will show file.url as link
           file.url = file.response.data.src;
-          this.$nextTick(()=>{
-            this.form.setFieldsValue({'typeImg':file.response.data.src})
-          })
+          if (file.response.data.src){
+            this.$nextTick(()=>{
+              this.form.setFieldsValue({'typeImg':file.response.data.src})
+            })
+          }else{
+            this.typeList = [];
+            this.$tips.warning('请求超时,请重新上传！')
+          }
         }
         return file;
       });
@@ -337,11 +346,15 @@ export default {
       fileList = fileList.slice(-1);
       fileList = fileList.map(file => {
         if (file.response) {
-          // Component will show file.url as link
           file.url = file.response.data.src;
-          this.$nextTick(()=>{
-            this.form.setFieldsValue({'bigImg':file.response.data.src})
-          })
+          if (file.response.data.src){
+            this.$nextTick(()=>{
+              this.form.setFieldsValue({'bigImg':file.response.data.src})
+            })
+          }else{
+            this.bigList = [];
+            this.$tips.warning('请求超时,请重新上传！')
+          }
         }
         return file;
       });

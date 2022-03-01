@@ -14,6 +14,12 @@ import { fileUpload} from '@/api/app/app'
 export default {
     name: "RichText",
     props: {
+      id: {
+        type: String,
+        default: function () {
+          return "vue-tinymce-" + +new Date() + ((Math.random() * 1000).toFixed(0) + "");
+        },
+      },
       richText: {
             type: String,
             default: "",
@@ -22,7 +28,8 @@ export default {
     data() {
         const _this = this;
         return {
-            tinymceId: "tinymce",
+            content:'',
+            tinymceId: this.id,
             init: {
                 selector: '#tinymce',
                 language_url: "/tinymce/langs/zh_CN.js", // 语言包的路径
@@ -60,20 +67,22 @@ export default {
                   })
                 },
                 init_instance_callback: (editor) => {
-                  this.$emit('updateContent',tinymce.activeEditor.getContent())
-                  // window.tinymce.get(_this.tinymceId).setContent( this.value);
+                  editor.on("KeyUp SetContent change", () => {
+                    this.$emit('updateContent',tinymce.activeEditor.getContent())
+                  })
                 },
             },
         };
     },
-    computed:{
-      content:{
-        get(){
-          return this.richText
+    watch:{
+      richText:{
+        handler(newName, oldName) {
+          this.$nextTick(()=>{
+            this.content = newName
+            console.log(tinymce)
+          })
         },
-        set(value){
-          this.$emit('updateContent',value)
-        }
+        deep:true
       }
     },
     components: { Editor },
@@ -81,7 +90,7 @@ export default {
 
     },
     mounted() {
-        tinymce.init({});
+      tinymce.init({});
     },
     methods: {
         pushQc(record){
