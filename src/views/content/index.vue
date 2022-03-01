@@ -10,9 +10,10 @@
         </a-col>
       </a-row>
       <a-table :columns='columns' rowKey='id' :data-source='tableData'  :loading="btnLoading2" style='background: #FFFFFF' bordered :pagination='false'>
-            <span slot='classic' slot-scope='typeFirst,typeSecond,typeThird'>
+            <span slot='classic' slot-scope='typeFirst,record'>
               <a-cascader
-                :defaultValue='[typeFirst,typeSecond,typeThird]'
+                :defaultValue='[typeFirst,record.typeSecond,record.typeThird]'
+                style='width: 300px'
                 :options="options"
                 disabled
                 placeholder="Please select"
