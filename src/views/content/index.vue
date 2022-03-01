@@ -373,7 +373,7 @@ export default {
       options:[],
       videoList:[],
       total:0,
-      page:0,
+      page:1,
       row:10
     }
   },
@@ -410,7 +410,8 @@ export default {
       getFlowerList({
         page:this.page,
         row:this.row,
-        title: this.formInline.title
+        title: this.formInline.title,
+        rand:2
       }).then(res=>{
         this.btnLoading2 = false
         this.total = res.data.total
@@ -418,7 +419,7 @@ export default {
       })
     },
     onShowSizeChange(current, pageSize) {
-      this.page = current-1;
+      this.page = current;
       this.row = pageSize
       this.getFlowerList();
     },
