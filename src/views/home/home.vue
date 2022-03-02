@@ -90,7 +90,7 @@
             list-type="picture"
             accept='image/*'
             :multiple="false"
-            action="http://121.201.66.113:9097//file/layeditUpload"
+            action="http://enflower_manage.happlay.net/file/layeditUpload"
             :file-list="typeList"
             @change="handleChange2"
           >
@@ -109,7 +109,7 @@
             list-type="picture"
             accept='image/*'
             :multiple="false"
-            action="http://121.201.66.113:9097//file/layeditUpload"
+            action="http://enflower_manage.happlay.net/file/layeditUpload"
             :file-list="bigList"
             @change="handleChange"
           >
