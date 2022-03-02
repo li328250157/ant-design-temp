@@ -152,7 +152,7 @@
             accept='.doc,.docx'
             :showUploadList='false'
             :multiple="false"
-            action="http://enflower_manage.happlay.net/file/getDocx"
+            action="/hua/file/getDocx"
             :file-list="wordList"
             @change="handleChangeDoc"
           >
@@ -196,7 +196,7 @@
             list-type="picture"
             accept='image/*'
             :multiple="false"
-            action="http://enflower_manage.happlay.net/file/layeditUpload"
+            action="/hua/file/layeditUpload"
             :file-list="bigImg"
             @change="handleChange"
           >
@@ -217,7 +217,7 @@
             name="file"
             list-type="picture"
             accept='image/*'
-            action="http://enflower_manage.happlay.net/file/layeditUpload"
+            action="/hua/file/layeditUpload"
             :file-list="typeImg1"
             @change="handleChange2"
           >
@@ -238,7 +238,7 @@
             name="file"
             list-type="picture"
             accept='image/*'
-            action="http://enflower_manage.happlay.net/file/layeditUpload"
+            action="/hua/file/layeditUpload"
             :file-list="typeImg2"
             @change="handleChange4"
           >
@@ -259,7 +259,7 @@
             name="file"
             list-type="picture"
             accept='image/*'
-            action="http://enflower_manage.happlay.net/file/layeditUpload"
+            action="/hua/file/layeditUpload"
             :file-list="typeImg3"
             @change="handleChange5"
           >
@@ -280,7 +280,7 @@
             name="file"
             list-type="picture"
             :multiple="false"
-            action="http://enflower_manage.happlay.net/file/layeditUpload"
+            action="/hua/file/layeditUpload"
             :file-list="videoList"
             @change="handleChange3"
           >
