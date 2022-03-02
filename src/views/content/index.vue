@@ -530,6 +530,8 @@ export default {
               this.$tips.warning(res.message)
             }
             this.btnLoading = false
+          }).catch(err=>{
+            this.btnLoading = false
           })
         }
       });
