@@ -16,6 +16,8 @@
           show-size-changer
           :default-current="1"
           :total="total"
+          :show-total="total => ` 共 ${total} 条`"
+          show-quick-jumper
           @showSizeChange="onShowSizeChange"
           @change='onShowSizeChange'
         />
@@ -58,7 +60,7 @@ export default {
       btnLoading2:false,
       btnLoading:false,
       total:0,
-      page:0,
+      page:1,
       row:10
     }
   },
@@ -70,7 +72,7 @@ export default {
     getEmailList(){
       this.btnLoading2 = true
       getEmailList({
-        page:this.page+1,
+        page:this.page,
         row:this.row
       }).then(res=>{
         console.log(res)
@@ -80,7 +82,7 @@ export default {
       })
     },
     onShowSizeChange(current, pageSize) {
-      this.page = current-1;
+      this.page = current;
       this.row = pageSize
       this.getEmailList();
     },

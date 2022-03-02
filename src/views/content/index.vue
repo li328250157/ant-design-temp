@@ -33,6 +33,8 @@
           show-size-changer
           :default-current="1"
           :total="total"
+          :show-total="total => ` 共 ${total} 条`"
+          show-quick-jumper
           @showSizeChange="onShowSizeChange"
           @change='onShowSizeChange'
         />

@@ -170,6 +170,7 @@ export default {
         wrapperCol: { span: 14 },
       },
       expandedRowKeys:[],
+      dataRow:{},
       typeName: "",
       tableData:[],
       btnLoading2:false,
@@ -257,6 +258,7 @@ export default {
       this.addTitle = "编辑分类"
       this.typeList = [];
       this.bigList = [];
+      this.dataRow = record
       this.$nextTick(()=>{
         let arr = this.mapTree2(record.parentId,this.options)
         this.form.setFieldsValue({'typeImg':record.imgUrl})
@@ -309,6 +311,9 @@ export default {
             values.topId = values.topId[0]
           }else if(values.topId.length==2){
             values.topId = values.topId[1]
+          }
+          if(this.addTitle = "编辑分类"){
+            values.id = this.dataRow.value
           }
           flowerSaveOrUpdate(values).then(res=>{
             this.$tips.success(this.addTitle+'成功！')
