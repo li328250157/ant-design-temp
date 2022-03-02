@@ -326,6 +326,8 @@ export default {
           }).catch(err=>{
             this.btnLoading = false
           })
+        }else{
+          this.btnLoading = false
         }
       });
     },
@@ -343,6 +345,7 @@ export default {
           }else{
             this.typeList = [];
             this.$tips.warning('请求超时,请重新上传！')
+            return false
           }
         }
         return file;
@@ -362,6 +365,7 @@ export default {
           }else{
             this.bigList = [];
             this.$tips.warning('请求超时,请重新上传！')
+            return false
           }
         }
         return file;

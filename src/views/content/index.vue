@@ -553,6 +553,7 @@ export default {
           }else{
             this.bigImg = [];
             this.$tips.warning('请求超时,请重新上传！')
+            return false
           }
         }
         return file;
@@ -578,6 +579,7 @@ export default {
           }else{
             this.typeImg1 = [];
             this.$tips.warning('请求超时,请重新上传！')
+            return false
           }
         }
         return file;
@@ -603,6 +605,7 @@ export default {
           }else{
             this.typeImg2 = [];
             this.$tips.warning('请求超时,请重新上传！')
+            return false
           }
         }
         return file;
@@ -628,6 +631,7 @@ export default {
           }else{
             this.typeImg3 = [];
             this.$tips.warning('请求超时,请重新上传！')
+            return false
           }
         }
         return file;
@@ -653,6 +657,7 @@ export default {
           }else{
             this.videoList = [];
             this.$tips.warning('请求超时,请重新上传！')
+            return false
           }
         }
         return file;
