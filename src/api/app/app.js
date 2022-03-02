@@ -69,7 +69,7 @@ export function deleteComment(parameter) {
   return request({
     url: api.deleteComment,
     method: 'post',
-    data: parameter
+    params: parameter
   })
 }
 export function getEmailList(parameter) {
@@ -83,7 +83,7 @@ export function deleteEmail(parameter) {
   return request({
     url: api.deleteEmail,
     method: 'post',
-    data: parameter
+    params: parameter
   })
 }
 export function getTypeTree(parameter) {

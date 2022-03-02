@@ -319,10 +319,14 @@ export default {
             values.id = this.dataRow.value
           }
           flowerSaveOrUpdate(values).then(res=>{
-            this.$tips.success(this.addTitle+'成功！')
-            this.getTypeTree()
+            if(res.status == 200){
+              this.$tips.success(this.addTitle+'成功！')
+              this.getTypeTree()
+              this.uploadVisible = false
+            }else{
+              this.$tips.warning(res.message)
+            }
             this.btnLoading = false
-            this.uploadVisible = false
           }).catch(err=>{
             this.btnLoading = false
           })
