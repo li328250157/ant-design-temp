@@ -90,7 +90,12 @@ export default {
       deleteEmail({
         id:record.id
       }).then(res=>{
-        this.$tips.success('删除成功！')
+        if (res.status==200){
+          this.$tips.success('删除成功！');
+          this.getEmailList();
+        }else {
+          this.$tips.warning(res.message);
+        }
       })
     },
     exportExcel(){

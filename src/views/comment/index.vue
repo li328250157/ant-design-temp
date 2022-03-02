@@ -9,7 +9,7 @@
           邮箱：<a-input-search v-model='formInline.email' placeholder="input search text" style="width: 400px" @search="getCommentList" />
         </a-col>
       </a-row>
-      <a-table :columns='columns' rowKey='artifactId' :data-source='tableData'  :loading="btnLoading2" style='background: #FFFFFF' bordered :pagination='false'>
+      <a-table :columns='columns' rowKey='id' :data-source='tableData'  :loading="btnLoading2" style='background: #FFFFFF' bordered :pagination='false'>
         <span slot="action" slot-scope="text, record">
               <a @click.prevent='contentDelete(record)'>删除</a>
         </span>
@@ -97,7 +97,12 @@ export default {
       deleteComment({
         id:record.id
       }).then(res=>{
-        this.$tips.success('删除成功！')
+        if (res.status==200){
+          this.$tips.success('删除成功！');
+          this.getCommentList();
+        }else {
+          this.$tips.warning(res.message);
+        }
       })
     },
   }

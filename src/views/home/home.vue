@@ -276,10 +276,13 @@ export default {
       console.log(record)
     },
     contentDelete(record){
-      console.log(record)
       delFlowerTypeById({ id:record.value }).then(res=>{
-        this.$tips.success('删除成功！')
-        this.getTypeTree()
+        if (res.status==200){
+          this.$tips.success('删除成功！');
+          this.getTypeTree()
+        }else {
+          this.$tips.warning(res.message);
+        }
       })
     },
     // 新建
