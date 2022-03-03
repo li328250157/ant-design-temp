@@ -59,10 +59,10 @@ export default {
                   formData.append('file', blobInfo.blob())
                   fileUpload(formData).then(res=>{
                     console.log(res)
-                    if (res.code==0){
+                    if (res.data.src){
                       success(res.data.src)
                     }else{
-                      failure(res.msg)
+                      failure("请求超时，请重新上传！")
                     }
                   })
                 },
