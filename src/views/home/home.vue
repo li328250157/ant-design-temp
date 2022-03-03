@@ -315,7 +315,7 @@ export default {
           }else if(values.topId.length==2){
             values.topId = values.topId[1]
           }
-          if(this.addTitle = "编辑分类"){
+          if(this.addTitle == "编辑分类"){
             values.id = this.dataRow.value
           }
           flowerSaveOrUpdate(values).then(res=>{
