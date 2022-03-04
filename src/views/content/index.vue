@@ -473,6 +473,9 @@ export default {
       this.richText =""
       this.typeImg= []
       this.bigImg = []
+      this.typeImg1 = []
+      this.typeImg2 = []
+      this.typeImg3 = []
       this.videoList= []
       this.wordList= []
       this.$nextTick(()=>{
