@@ -1201,3 +1201,6 @@ pre[class*=language-] {
   color: #409eff;
   background-color: #d9ecff;
 }
+.ant-pro-sider-menu-sider.fix-sider-bar{
+  z-index: 999!important;
+}

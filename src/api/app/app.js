@@ -5,7 +5,8 @@ const api = {
   flowerSaveOrUpdate:'/flowerType/flowerSaveOrUpdate',
   flower2SaveOrUpdate:'/flower/flowerSaveOrUpdate',
   delFlowerTypeById:'/flowerType/delFlowerTypeById',
-  commentList:'/comment/getCommentList',
+  commentList:'/comment/getCommentFlowerList',
+  getCommentListByFlowerId:'/comment/getCommentListByFlowerId',
   deleteComment:'/comment/removeCommentById',
   emailList:'/googleUser/getGoogleUserList',
   deleteEmail:'/googleUser/removeGoogleById',
@@ -61,6 +62,13 @@ export function delFlowerTypeById(parameter) {
 export function getCommentList(parameter) {
   return request({
     url: api.commentList,
+    method: 'post',
+    data: parameter
+  })
+}
+export function getCommentListByFlowerId(parameter) {
+  return request({
+    url: api.getCommentListByFlowerId,
     method: 'post',
     data: parameter
   })
