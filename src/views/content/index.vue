@@ -30,10 +30,6 @@
              <span v-if='record.showType==3'></span>
              <span v-else-if='record.showType==2'><a-avatar  shape="square" :size="50" :src="iconSrc.split(',')[0]" /><a-avatar  shape="square" :size="50" :src="iconSrc.split(',')[1]" /><a-avatar  shape="square" :size="50" :src="iconSrc.split(',')[2]" /></span>
              <span v-else><a-avatar  shape="square" :size="50" :src="iconSrc" /></span>
-             <span><a-avatar  shape="square" :size="50" :src="iconSrc" /></span>
-             <span><a-avatar  shape="square" :size="50" :src="iconSrc" /></span>
-             <span><a-avatar  shape="square" :size="50" :src="iconSrc" /></span>
-             <span><a-avatar  shape="square" :size="50" :src="iconSrc" /></span>
             </span>
             <span slot="action" slot-scope="text, record">
               <a @click.prevent='contentEdit(record)'>编辑</a>
@@ -406,7 +402,7 @@ export default {
   },
   created() {
     this.getTypeTree()
-    // this.getFlowerList()
+    this.getFlowerList()
   },
   methods: {
     pushQc(record){
