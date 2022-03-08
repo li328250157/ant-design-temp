@@ -2,8 +2,10 @@ const path = require('path')
 const webpack = require('webpack')
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const GitRevision = new GitRevisionPlugin()
+const CompressionWebpackPlugin = require('compression-webpack-plugin')
 const buildDate = JSON.stringify(new Date().toLocaleString())
 const createThemeColorReplacerPlugin = require('./config/plugin.config')
+const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -49,6 +51,13 @@ const vueConfig = {
         APP_VERSION: `"${require('./package.json').version}"`,
         GIT_HASH: JSON.stringify(getGitHash()),
         BUILD_DATE: buildDate
+      }),
+      new CompressionWebpackPlugin({
+        filename: '[path].gz[query]',
+        algorithm: 'gzip',
+        test: productionGzipExtensions,
+        threshold: 10240,
+        minRatio: 0.8
       })
     ],
     // if prod, add externals
@@ -79,10 +88,10 @@ const vueConfig = {
     // if prod is on
     // assets require on cdn
     // if (isProd) {
-    //   config.plugin('html').tap(args => {
-    //     args[0].cdn = assetsCDN
-    //     return args
-    //   })
+      // config.plugin('html').tap(args => {
+      //   args[0].cdn = assetsCDN
+      //   return args
+      // })
     // }
   },
 

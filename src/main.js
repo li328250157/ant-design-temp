@@ -10,11 +10,8 @@ import {
 import notification from 'ant-design-vue/es/notification'
 import message from 'ant-design-vue/es/message'
 import 'core-js/stable'
-import ElementUI from 'element-ui'
-import 'element-ui/lib/theme-chalk/index.css'
 import 'regenerator-runtime/runtime'
 import Vue from 'vue'
-import VueWorker from 'vue-worker'
 import themePluginConfig from '../config/themePluginConfig'
 import App from './App.vue'
 import ProLayout, {
@@ -38,7 +35,6 @@ import VueVirtualScroller from 'vue-virtual-scroller'
 import 'vue-virtual-scroller/dist/vue-virtual-scroller.css'
 import VueClipboard from 'vue-clipboard2'
 import 'xe-utils'
-import VXETable from 'vxe-table'
 import 'vxe-table/lib/style.css'
 import * as XLSX from 'xlsx/xlsx.mjs';
 
@@ -50,7 +46,6 @@ Vue.directive('highlight', function(el, obj) {
 })
 Vue.use(VueVirtualScroller)
 Vue.use(VueClipboard)
-Vue.use(VXETable)
 // mount axios to `Vue.$http` and `this.$http`
 Vue.use(plugins)
 Vue.use(VueAxios)
@@ -58,9 +53,7 @@ Vue.use(Tree)
 Vue.use(TreeSelect)
 Vue.use(Pagination)
 Vue.use(Cascader)
-Vue.use(ElementUI)
 Vue.use(FormModel)
-Vue.use(VueWorker)
 // use pro-layout components
 Vue.component('pro-layout', ProLayout)
 Vue.component('page-container', PageHeaderWrapper)
