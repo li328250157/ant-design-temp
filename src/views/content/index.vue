@@ -19,8 +19,21 @@
                 placeholder="Please select"
               />
             </span>
-           <span slot='iconSrc' slot-scope='iconSrc'>
-                <a-avatar  shape="square" :size="200" :src="iconSrc" />
+            <span slot='showType' slot-scope='showType,record'>
+              <a-tag v-if='showType==1' color="#2db7f5">大图文</a-tag>
+              <a-tag v-else-if='showType==2' color="#2db7f5">三图</a-tag>
+              <a-tag v-else-if='showType==3' color="#2db7f5">文字</a-tag>
+              <a-tag v-else-if='showType==4' color="#2db7f5">视频</a-tag>
+              <a-tag v-else-if='showType==5' color="#2db7f5">小图</a-tag>
+            </span>
+           <span slot='iconSrc' slot-scope='iconSrc,record'>
+             <span v-if='record.showType==3'></span>
+             <span v-else-if='record.showType==2'><a-avatar  shape="square" :size="50" :src="iconSrc.split(',')[0]" /><a-avatar  shape="square" :size="50" :src="iconSrc.split(',')[1]" /><a-avatar  shape="square" :size="50" :src="iconSrc.split(',')[2]" /></span>
+             <span v-else><a-avatar  shape="square" :size="50" :src="iconSrc" /></span>
+             <span><a-avatar  shape="square" :size="50" :src="iconSrc" /></span>
+             <span><a-avatar  shape="square" :size="50" :src="iconSrc" /></span>
+             <span><a-avatar  shape="square" :size="50" :src="iconSrc" /></span>
+             <span><a-avatar  shape="square" :size="50" :src="iconSrc" /></span>
             </span>
             <span slot="action" slot-scope="text, record">
               <a @click.prevent='contentEdit(record)'>编辑</a>
@@ -329,7 +342,14 @@ const columns = [
   {
     title: '标题',
     dataIndex: 'title',
+    width:400,
     key: 'title',
+  },
+  {
+    title: '展示类型',
+    dataIndex: 'showType',
+    key: 'showType',
+    scopedSlots: { customRender: 'showType' },
   },
   {
     title: '缩略图',
@@ -386,7 +406,7 @@ export default {
   },
   created() {
     this.getTypeTree()
-    this.getFlowerList()
+    // this.getFlowerList()
   },
   methods: {
     pushQc(record){
