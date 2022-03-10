@@ -23,7 +23,7 @@
         <span slot="action" slot-scope="text, record">
               <a @click.prevent='contentEdit(record)'>编辑</a>
               <a-divider type="vertical" />
-              <a @click.prevent='contentDelete(record)'>删除</a>
+              <a v-if='record.value!=1' @click.prevent='contentDelete(record)'>删除</a>
             </span>
       </a-table>
     </a-card>
@@ -246,6 +246,13 @@ export default {
       getTypeTree().then(res=>{
         this.options = JSON.parse(res.data);
         this.btnLoading2 = false
+      })
+      getTypeTree({
+        id:1,
+        page:1,
+        row:10
+      }).then(res=>{
+        this.options.push(JSON.parse(res.data)[0]);
       })
     },
     onShowSizeChange(current, pageSize) {
