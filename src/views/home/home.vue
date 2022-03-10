@@ -247,13 +247,6 @@ export default {
         this.options = JSON.parse(res.data);
         this.btnLoading2 = false
       })
-      getTypeTree({
-        id:1,
-        page:1,
-        row:10
-      }).then(res=>{
-        this.options.push(JSON.parse(res.data)[0]);
-      })
     },
     onShowSizeChange(current, pageSize) {
       this.page = current-1;
