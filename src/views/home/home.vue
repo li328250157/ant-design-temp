@@ -308,12 +308,16 @@ export default {
         if (!err) {
           if (values.topId.length==3){
             values.topId = values.topId[1]
+            values.level = 3
           }else if(values.topId.length==0){
             values.topId = 0
+            values.level = 1
           }else if(values.topId.length==1){
             values.topId = values.topId[0]
+            values.level = 1
           }else if(values.topId.length==2){
             values.topId = values.topId[1]
+            values.level = 2
           }
           if(this.addTitle == "编辑分类"){
             values.id = this.dataRow.value
