@@ -96,7 +96,7 @@ export function deleteEmail(parameter) {
 }
 export function getTypeTree(parameter) {
   return request({
-    url: api.TypeTree,
+    url: api.TypeTree + '?=' + new Date().getTime(),
     method: 'get',
     params: parameter
   })
