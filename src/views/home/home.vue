@@ -314,7 +314,7 @@ export default {
             values.level = 1
           }else if(values.topId.length==1){
             values.topId = values.topId[0]
-            values.level = 1
+            values.level = 2
           }else if(values.topId.length==2){
             values.topId = values.topId[1]
             values.level = 2
