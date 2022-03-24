@@ -317,7 +317,7 @@ export default {
             values.level = 2
           }else if(values.topId.length==2){
             values.topId = values.topId[1]
-            values.level = 2
+            values.level = 3
           }
           if(this.addTitle == "编辑分类"){
             values.id = this.dataRow.value
