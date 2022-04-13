@@ -267,13 +267,15 @@ export default {
         this.form.setFieldsValue({'bigImg':record.bigImg})
         this.form.setFieldsValue({'sort':record.sort})
         if (arr.length>0){
-          this.form.setFieldsValue({'topId':[arr[0].value,record.parentId]})
+          if (arr[0].value===record.parentId){
+            this.form.setFieldsValue({'topId':[record.parentId]})
+          }else {
+            this.form.setFieldsValue({'topId':[arr[0].value,record.parentId]})
+          }
         }else {
           this.form.setFieldsValue({'topId':[record.parentId]})
         }
       })
-
-      console.log(record)
     },
     contentDelete(record){
       delFlowerTypeById({ id:record.value }).then(res=>{
@@ -303,24 +305,41 @@ export default {
     handleSubmit(e) {
       e.preventDefault();
       this.form.validateFields((err, values) => {
-        console.log(values)
-        this.btnLoading = true
+        // this.btnLoading = true
         if (!err) {
-          if (values.topId.length==3){
-            values.topId = values.topId[1]
-            values.level = 3
-          }else if(values.topId.length==0){
-            values.topId = 0
-            values.level = 1
-          }else if(values.topId.length==1){
-            values.topId = values.topId[0]
-            values.level = 2
-          }else if(values.topId.length==2){
-            values.topId = values.topId[1]
-            values.level = 3
-          }
           if(this.addTitle == "编辑分类"){
             values.id = this.dataRow.value
+            if (values.topId.length==3){
+              values.topId = values.topId[1]
+              values.level = 3
+            }else if(values.topId.length==0){
+              values.topId = 0
+              values.level = 1
+            }else if(values.topId.length==1){
+              values.topId = values.topId[0]
+              if (values.topId===0){
+                values.level = 1
+              }else{
+                values.level = 2
+              }
+            }else if(values.topId.length==2){
+              values.topId = values.topId[1]
+              values.level = 3
+            }
+          }else{
+            if (values.topId.length==3){
+              values.topId = values.topId[1]
+              values.level = 3
+            }else if(values.topId.length==0){
+              values.topId = 0
+              values.level = 1
+            }else if(values.topId.length==1){
+              values.topId = values.topId[0]
+              values.level = 2
+            }else if(values.topId.length==2){
+              values.topId = values.topId[1]
+              values.level = 3
+            }
           }
           flowerSaveOrUpdate(values).then(res=>{
             if(res.status == 200){
